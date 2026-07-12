@@ -76,18 +76,21 @@ body {
 
 html {
   background: var(--bg);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
-#app {
-  min-height: 100vh;
-  position: relative;
-  z-index: 2;
-  transition:
-    opacity 0.45s ease,
-    transform 0.45s ease,
-    filter 0.45s ease;
-}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
 
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
 .scene {
   min-height: 100vh;
   min-height: 100svh;
@@ -658,26 +661,44 @@ button:hover {
   }
 }
 
-@media (max-width: 430px) {
+@media (max-width: 600px) {
   .mahjong-card {
+    width: 100%;
     max-width: 100%;
+    overflow: hidden;
   }
 
   .mahjong-hand {
-    gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(14, minmax(0, 1fr));
+    gap: 3px;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 2px;
+    margin: 22px auto 18px;
   }
 
-  .mahjong-tile,
+  .mahjong-tile {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 38 / 52;
+    min-width: 0;
+    padding: 0;
+    font-size: clamp(0.72rem, 3.7vw, 1.05rem);
+    border-radius: 7px;
+  }
+
   .mahjong-discarded-tile {
     width: 32px;
     height: 46px;
-    font-size: 1.15rem;
-    border-radius: 8px;
+    padding: 0;
+    font-size: 1.05rem;
   }
 
   .table-tile {
-    width: 62px;
-    height: 78px;
+    width: 58px;
+    height: 72px;
+    font-size: 1.5rem;
   }
 }
 
@@ -1087,3 +1108,40 @@ button:hover {
   }
 }
 
+@media (max-width: 768px) {
+  .photo-placeholder img {
+    will-change: auto;
+    transform: scale(1.06);
+    transition:
+      transform 2.2s ease,
+      filter 2.2s ease;
+  }
+
+  .reveal.active .photo-placeholder img {
+    transform: scale(1);
+  }
+
+  .memory-light {
+    filter: blur(22px);
+    animation-duration: 12s;
+  }
+
+  .memory-frame .photo-placeholder {
+    animation: none;
+    box-shadow:
+      0 18px 48px rgba(0,0,0,0.42),
+      0 0 0 1px rgba(255,255,255,0.04);
+  }
+
+  .dust-particle:nth-child(n + 19) {
+    display: none;
+  }
+
+  .reveal {
+    filter: blur(4px);
+    transition:
+      opacity 0.85s ease,
+      transform 0.85s ease,
+      filter 0.85s ease;
+  }
+}

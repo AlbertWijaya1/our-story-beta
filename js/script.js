@@ -322,23 +322,41 @@ function setupParallax() {
   if (parallaxStarted) return;
   parallaxStarted = true;
 
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+  if (isMobile) {
+    return;
+  }
+
+  let ticking = false;
+
+  function updateParallax() {
+    const photos = document.querySelectorAll(".photo-placeholder img");
+
+    photos.forEach(photo => {
+      const rect = photo.getBoundingClientRect();
+      const offset = rect.top * -0.035;
+      const limitedOffset = Math.max(-34, Math.min(34, offset));
+
+      photo.style.transform =
+        `translateY(${limitedOffset}px) scale(1.1)`;
+    });
+
+    ticking = false;
+  }
+
   window.addEventListener(
     "scroll",
     () => {
-      const photos = document.querySelectorAll(".photo-placeholder img");
-
-      photos.forEach(photo => {
-        const rect = photo.getBoundingClientRect();
-        const offset = rect.top * -0.035;
-
-        const limitedOffset = Math.max(-34, Math.min(34, offset));
-
-        photo.style.transform =
-          `translateY(${limitedOffset}px) scale(1.1)`;
-      });
+      if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
     },
     { passive: true }
   );
+
+  updateParallax();
 }
   
 function setupHoldHand(section) {
