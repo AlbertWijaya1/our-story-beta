@@ -12,24 +12,6 @@
   --atmosphere-glow-y: 38%;
 }
 
-body {
-  margin: 0;
-  background:
-    radial-gradient(
-      circle at var(--atmosphere-glow-x) var(--atmosphere-glow-y),
-      var(--atmosphere-glow),
-      transparent 42%
-    ),
-    radial-gradient(
-      circle at center,
-      transparent 48%,
-      var(--atmosphere-vignette) 100%
-    ),
-    var(--atmosphere-base);
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-  transition: none;
-}
 
 .dust-layer {
   position: fixed;
@@ -83,14 +65,28 @@ html {
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+
+  background:
+    radial-gradient(
+      circle at var(--atmosphere-glow-x) var(--atmosphere-glow-y),
+      var(--atmosphere-glow),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at center,
+      transparent 48%,
+      var(--atmosphere-vignette) 100%
+    ),
+    var(--atmosphere-base);
+
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  transition: none;
 }
+
 .scene {
   min-height: 100vh;
   min-height: 100svh;
@@ -427,9 +423,6 @@ button:hover {
   will-change: transform;
 }
 
-.reveal.active .photo-placeholder img {
-  filter: brightness(1);
-}
 
 
 .chapter-moment:first-of-type .photo-placeholder {
@@ -1115,10 +1108,6 @@ button:hover {
     transition:
       transform 2.2s ease,
       filter 2.2s ease;
-  }
-
-  .reveal.active .photo-placeholder img {
-    transform: scale(1);
   }
 
   .memory-light {
