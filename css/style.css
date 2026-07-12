@@ -1382,6 +1382,26 @@ button:hover {
 
   .adventure-slide {
     border-radius: 22px;
+
+    opacity: 0.38;
+
+    transform: scale(0.9) translateZ(0);
+
+    filter:
+      blur(2.5px)
+      brightness(0.72)
+      saturate(0.78);
+  }
+
+  .adventure-slide.is-active {
+    opacity: 1;
+
+    transform: scale(0.98) translateZ(0);
+
+    filter:
+      blur(0)
+      brightness(1)
+      saturate(1);
   }
 
   .adventure-edge {
