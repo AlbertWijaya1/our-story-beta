@@ -994,139 +994,168 @@
 
     sound.play().catch(() => {});
   }
-
   function setupAdventureCarousel(section) {
     const carousel = section.querySelector(".adventure-carousel");
-    const slides = [...section.querySelectorAll(".adventure-slide")];
     const card = section.querySelector(".adventure-carousel-card");
 
-    if (!carousel || !slides.length || !card) return;
+    if (!carousel || !card) return;
 
-    let activeIndex = 0;
-    let autoScrollTimer = null;
+    const originalSlides = [
+      ...carousel.querySelectorAll(".adventure-slide")
+    ];
+
+    if (originalSlides.length < 2) return;
+
+    /*
+      Create three identical sets:
+
+      cloned set
+      original set
+      cloned set
+
+      We begin in the middle set, allowing the carousel
+      to wrap seamlessly in either direction.
+    */
+
+    const beforeFragment = document.createDocumentFragment();
+    const afterFragment = document.createDocumentFragment();
+
+    originalSlides.forEach(slide => {
+      beforeFragment.appendChild(slide.cloneNode(true));
+      afterFragment.appendChild(slide.cloneNode(true));
+    });
+
+    carousel.prepend(beforeFragment);
+    carousel.append(afterFragment);
+
+    let animationFrame = null;
+    let lastTime = null;
     let resumeTimer = null;
-    let scrollFrame = null;
 
+    let isPaused = false;
     let isDragging = false;
+
     let dragStartX = 0;
     let dragStartScrollLeft = 0;
 
-    function getClosestSlideIndex() {
-      const carouselRect = carousel.getBoundingClientRect();
-      const carouselCenter =
-        carouselRect.left + carouselRect.width / 2;
+    let setWidth = 0;
 
-      let closestIndex = 0;
-      let closestDistance = Infinity;
+    const speed = 18; // pixels per second — increase slightly if too slow
 
-      slides.forEach((slide, index) => {
-        const rect = slide.getBoundingClientRect();
-        const slideCenter = rect.left + rect.width / 2;
-        const distance = Math.abs(carouselCenter - slideCenter);
+    function measureCarousel() {
+      setWidth = carousel.scrollWidth / 3;
 
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = index;
-        }
-      });
-
-      return closestIndex;
+      // Begin at the original middle set
+      carousel.scrollLeft = setWidth;
     }
 
     function updateActiveSlide() {
-      activeIndex = getClosestSlideIndex();
+      const allSlides = [
+        ...carousel.querySelectorAll(".adventure-slide")
+      ];
 
-      slides.forEach((slide, index) => {
+      const carouselRect = carousel.getBoundingClientRect();
+      const center =
+        carouselRect.left + carouselRect.width / 2;
+
+      let closestSlide = null;
+      let closestDistance = Infinity;
+
+      allSlides.forEach(slide => {
+        const rect = slide.getBoundingClientRect();
+        const slideCenter = rect.left + rect.width / 2;
+        const distance = Math.abs(center - slideCenter);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestSlide = slide;
+        }
+      });
+
+      allSlides.forEach(slide => {
         slide.classList.toggle(
           "is-active",
-          index === activeIndex
+          slide === closestSlide
         );
       });
+    }
 
-      if (activeIndex === slides.length - 1) {
-        card.classList.add("journey-complete");
-        stopAutoScroll();
+    function keepInsideInfiniteLoop() {
+      if (!setWidth) return;
+
+      // Entered the third set: quietly return to middle set
+      if (carousel.scrollLeft >= setWidth * 2) {
+        carousel.scrollLeft -= setWidth;
+      }
+
+      // Entered the first set: quietly return to middle set
+      if (carousel.scrollLeft <= 0) {
+        carousel.scrollLeft += setWidth;
       }
     }
 
-    function centerSlide(index, behavior = "smooth") {
-      const slide = slides[index];
-      if (!slide) return;
+    function animate(currentTime) {
+      if (lastTime === null) {
+        lastTime = currentTime;
+      }
 
-      slide.scrollIntoView({
-        behavior,
-        block: "nearest",
-        inline: "center"
-      });
+      const elapsedSeconds =
+        Math.min((currentTime - lastTime) / 1000, 0.05);
+
+      lastTime = currentTime;
+
+      if (!isPaused && !isDragging) {
+        carousel.scrollLeft += speed * elapsedSeconds;
+      }
+
+      keepInsideInfiniteLoop();
+      updateActiveSlide();
+
+      animationFrame = requestAnimationFrame(animate);
     }
 
-    function stopAutoScroll() {
-      if (autoScrollTimer) {
-        clearInterval(autoScrollTimer);
-        autoScrollTimer = null;
+    function pauseCarousel() {
+      isPaused = true;
+
+      if (resumeTimer) {
+        clearTimeout(resumeTimer);
       }
     }
 
-    function startAutoScroll() {
-      stopAutoScroll();
-
-      if (activeIndex >= slides.length - 1) return;
-
-      autoScrollTimer = setInterval(() => {
-        if (activeIndex >= slides.length - 1) {
-          stopAutoScroll();
-          return;
-        }
-
-        centerSlide(activeIndex + 1);
-      }, 4500);
-    }
-
-    function pauseAndResumeLater() {
-      stopAutoScroll();
-
+    function resumeCarouselLater() {
       if (resumeTimer) {
         clearTimeout(resumeTimer);
       }
 
       resumeTimer = setTimeout(() => {
-        updateActiveSlide();
-        startAutoScroll();
-      }, 5000);
+        isPaused = false;
+      }, 3000);
     }
 
-    carousel.addEventListener(
-      "scroll",
-      () => {
-        if (scrollFrame) return;
-
-        scrollFrame = requestAnimationFrame(() => {
-          updateActiveSlide();
-          scrollFrame = null;
-        });
-      },
-      { passive: true }
-    );
+    /*
+      Desktop mouse dragging
+    */
 
     carousel.addEventListener("pointerdown", event => {
       isDragging = true;
+      pauseCarousel();
 
       dragStartX = event.clientX;
       dragStartScrollLeft = carousel.scrollLeft;
 
       carousel.classList.add("is-dragging");
       carousel.setPointerCapture(event.pointerId);
-
-      pauseAndResumeLater();
     });
 
     carousel.addEventListener("pointermove", event => {
       if (!isDragging) return;
 
-      const distance = event.clientX - dragStartX;
+      const movement = event.clientX - dragStartX;
 
       carousel.scrollLeft =
-        dragStartScrollLeft - distance;
+        dragStartScrollLeft - movement;
+
+      keepInsideInfiniteLoop();
     });
 
     function finishDragging(event) {
@@ -1139,44 +1168,55 @@
         carousel.releasePointerCapture(event.pointerId);
       }
 
-      activeIndex = getClosestSlideIndex();
-      centerSlide(activeIndex);
-
-      pauseAndResumeLater();
+      keepInsideInfiniteLoop();
+      resumeCarouselLater();
     }
 
     carousel.addEventListener("pointerup", finishDragging);
     carousel.addEventListener("pointercancel", finishDragging);
-    carousel.addEventListener("pointerleave", event => {
-      if (isDragging) {
-        finishDragging(event);
-      }
+
+    /*
+      Phone touch interaction
+
+      Native touch scrolling handles the actual swipe.
+      These events only pause and resume the automatic movement.
+    */
+
+    carousel.addEventListener(
+      "touchstart",
+      () => {
+        pauseCarousel();
+      },
+      { passive: true }
+    );
+
+    carousel.addEventListener(
+      "touchend",
+      () => {
+        keepInsideInfiniteLoop();
+        resumeCarouselLater();
+      },
+      { passive: true }
+    );
+
+    carousel.addEventListener(
+      "scroll",
+      () => {
+        keepInsideInfiniteLoop();
+      },
+      { passive: true }
+    );
+
+    window.addEventListener("resize", () => {
+      measureCarousel();
     });
 
-    carousel.addEventListener("touchstart", pauseAndResumeLater, {
-      passive: true
-    });
-
-    carousel.addEventListener("wheel", pauseAndResumeLater, {
-      passive: true
-    });
-
-    slides.forEach(slide => {
-      slide.addEventListener("click", () => {
-        const index = Number(slide.dataset.adventureIndex);
-
-        centerSlide(index);
-        pauseAndResumeLater();
-      });
-    });
-
+    // Wait until the browser has calculated all slide dimensions
     requestAnimationFrame(() => {
-      centerSlide(0, "auto");
+      measureCarousel();
       updateActiveSlide();
 
-      setTimeout(() => {
-        startAutoScroll();
-      }, 1500);
+      animationFrame = requestAnimationFrame(animate);
     });
   }  
   /* ============================== */

@@ -1206,13 +1206,8 @@ button:hover {
   padding-right:
     calc((100vw - var(--adventure-width)) / 2);
 
-  scroll-padding-left:
-    calc((100vw - var(--adventure-width)) / 2);
-
-  scroll-padding-right:
-    calc((100vw - var(--adventure-width)) / 2);
-
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
 
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
@@ -1220,7 +1215,7 @@ button:hover {
   scrollbar-width: none;
 
   cursor: grab;
-  touch-action: pan-y;
+  touch-action: pan-x pan-y;
 }
 
 .adventure-carousel::-webkit-scrollbar {
@@ -1238,8 +1233,6 @@ button:hover {
 
   aspect-ratio: 4 / 5;
 
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
 
   border-radius: 28px;
   overflow: hidden;
@@ -1352,16 +1345,6 @@ button:hover {
 .adventure-reflection {
   margin-top: 46px;
 
-  opacity: 0;
-  transform: translateY(18px);
-
-  transition:
-    opacity 1.2s ease,
-    transform 1.2s ease;
-}
-
-.adventure-carousel-card.journey-complete
-.adventure-reflection {
   opacity: 1;
   transform: translateY(0);
 }
