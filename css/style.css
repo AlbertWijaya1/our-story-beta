@@ -1159,57 +1159,134 @@ button:hover {
 }
 
 /* ===========================
-   Adventure Carousel
+   Cinematic Adventure Carousel
 =========================== */
 
 .adventure-carousel-card {
   width: 100%;
-  max-width: 860px;
+  max-width: 100%;
   text-align: center;
   overflow: hidden;
 }
 
+.adventure-carousel-card > h1 {
+  padding: 0 24px;
+}
+
+.adventure-carousel-card > .small-text,
+.adventure-carousel-card > .intro-text {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.adventure-carousel-shell {
+  position: relative;
+  width: 100%;
+  margin-top: 14px;
+  overflow: hidden;
+}
+
 .adventure-carousel {
+  --adventure-width: min(74vw, 360px);
+
   display: flex;
-  gap: 18px;
+  align-items: center;
+  gap: 22px;
 
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
 
-  padding: 18px max(24px, calc((100vw - 320px) / 2));
-  margin: 8px auto 0;
+  padding-top: 30px;
+  padding-bottom: 38px;
+
+  padding-left:
+    calc((100vw - var(--adventure-width)) / 2);
+
+  padding-right:
+    calc((100vw - var(--adventure-width)) / 2);
+
+  scroll-padding-left:
+    calc((100vw - var(--adventure-width)) / 2);
+
+  scroll-padding-right:
+    calc((100vw - var(--adventure-width)) / 2);
 
   scroll-snap-type: x mandatory;
-  scroll-padding-inline: max(24px, calc((100vw - 320px) / 2));
 
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
 
   scrollbar-width: none;
+
+  cursor: grab;
+  touch-action: pan-y;
 }
 
 .adventure-carousel::-webkit-scrollbar {
   display: none;
 }
 
+.adventure-carousel.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
 .adventure-slide {
-  flex: 0 0 min(76vw, 340px);
+  flex: 0 0 var(--adventure-width);
+
   aspect-ratio: 4 / 5;
 
   scroll-snap-align: center;
   scroll-snap-stop: always;
 
-  border-radius: 26px;
+  border-radius: 28px;
   overflow: hidden;
 
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  opacity: 0.48;
+
+  transform:
+    scale(0.86)
+    translateZ(0);
+
+  filter:
+    blur(3px)
+    brightness(0.65)
+    saturate(0.72);
+
+  border:
+    1px solid rgba(212, 175, 55, 0.12);
 
   box-shadow:
-    0 20px 55px rgba(0, 0, 0, 0.42),
-    0 0 0 1px rgba(255, 255, 255, 0.03);
+    0 18px 46px rgba(0, 0, 0, 0.34);
 
-  background: rgba(255, 255, 255, 0.04);
+  transition:
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.8s ease,
+    filter 0.8s ease,
+    border-color 0.8s ease,
+    box-shadow 0.8s ease;
+}
+
+.adventure-slide.is-active {
+  opacity: 1;
+
+  transform:
+    scale(1)
+    translateZ(0);
+
+  filter:
+    blur(0)
+    brightness(1)
+    saturate(1);
+
+  border-color:
+    rgba(212, 175, 55, 0.34);
+
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.52),
+    0 0 34px rgba(212, 175, 55, 0.08);
 }
 
 .adventure-slide img {
@@ -1224,40 +1301,124 @@ button:hover {
   transform: none;
   animation: none;
   filter: none;
+
+  pointer-events: none;
+  user-select: none;
+}
+
+.adventure-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+
+  width: 12%;
+
+  pointer-events: none;
+  z-index: 4;
+}
+
+.adventure-edge-left {
+  left: 0;
+
+  background:
+    linear-gradient(
+      to right,
+      var(--atmosphere-base),
+      transparent
+    );
+}
+
+.adventure-edge-right {
+  right: 0;
+
+  background:
+    linear-gradient(
+      to left,
+      var(--atmosphere-base),
+      transparent
+    );
 }
 
 .adventure-swipe-hint {
-  margin: 14px auto 32px;
+  margin: 2px auto 38px;
 
   color: var(--muted);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
 
-  opacity: 0.72;
+  opacity: 0.68;
 }
 
 .adventure-reflection {
-  margin-top: 42px;
+  margin-top: 46px;
+
+  opacity: 0;
+  transform: translateY(18px);
+
+  transition:
+    opacity 1.2s ease,
+    transform 1.2s ease;
+}
+
+.adventure-carousel-card.journey-complete
+.adventure-reflection {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .adventure-final-text {
-  margin-top: 90px;
-  margin-bottom: 40px;
+  max-width: 390px;
 
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(1.65rem, 6vw, 2.4rem);
-  line-height: 1.25;
+  margin:
+    100px auto 44px;
+
+  padding:
+    0 26px;
 
   color: var(--text);
+
+  font-family:
+    'Cormorant Garamond',
+    serif;
+
+  font-size:
+    clamp(1.8rem, 7vw, 2.8rem);
+
+  line-height: 1.25;
 }
 
-@media (min-width: 769px) {
-  .adventure-slide {
-    flex-basis: 360px;
+@media (max-width: 600px) {
+  .adventure-carousel {
+    --adventure-width: 72vw;
+
+    gap: 14px;
+
+    padding-top: 20px;
+    padding-bottom: 28px;
   }
 
+  .adventure-slide {
+    border-radius: 22px;
+  }
+
+  .adventure-edge {
+    width: 9%;
+  }
+
+  .adventure-reflection {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+}
+
+@media (min-width: 900px) {
   .adventure-carousel {
-    padding-inline: calc((100% - 360px) / 2);
-    scroll-padding-inline: calc((100% - 360px) / 2);
+    --adventure-width: 380px;
+
+    padding-left:
+      calc((100vw - var(--adventure-width)) / 2);
+
+    padding-right:
+      calc((100vw - var(--adventure-width)) / 2);
   }
 }

@@ -213,8 +213,7 @@
               `).join("")}
             </div>
           `;
-        } 
-        else if (scene.type === "adventureCarousel") {
+        } else if (scene.type === "adventureCarousel") {
 
           section.innerHTML = `
             <div class="adventure-carousel-card">
@@ -231,19 +230,29 @@
                 ${scene.intro}
               </p>
 
-              <div
-                class="adventure-carousel"
-                aria-label="Our adventure memories"
-              >
-                ${scene.images.map((image, index) => `
-                  <div class="adventure-slide">
-                    <img
-                      src="${image}"
-                      alt="Adventure memory ${index + 1}"
-                      loading="lazy"
+              <div class="adventure-carousel-shell">
+
+                <div
+                  class="adventure-carousel"
+                  aria-label="Our adventure memories"
+                >
+                  ${scene.images.map((image, index) => `
+                    <div
+                      class="adventure-slide"
+                      data-adventure-index="${index}"
                     >
-                  </div>
-                `).join("")}
+                      <img
+                        src="${image}"
+                        alt="Adventure memory ${index + 1}"
+                        draggable="false"
+                      >
+                    </div>
+                  `).join("")}
+                </div>
+
+                <div class="adventure-edge adventure-edge-left"></div>
+                <div class="adventure-edge adventure-edge-right"></div>
+
               </div>
 
               <p class="adventure-swipe-hint">
@@ -254,7 +263,7 @@
                 ${scene.reflection}
               </p>
 
-              <p class="intro-text adventure-final-text">
+              <p class="adventure-final-text">
                 ${scene.finalText}
               </p>
 
@@ -344,6 +353,10 @@
 
       if (scene.type === "mahjong") {
         setupMahjongGame(section);
+      }
+      
+      if (scene.type === "adventureCarousel") {
+        setupAdventureCarousel(section);
       }
 
       if (scene.type === "holdHand") {
@@ -982,6 +995,190 @@
     sound.play().catch(() => {});
   }
 
+  function setupAdventureCarousel(section) {
+    const carousel = section.querySelector(".adventure-carousel");
+    const slides = [...section.querySelectorAll(".adventure-slide")];
+    const card = section.querySelector(".adventure-carousel-card");
+
+    if (!carousel || !slides.length || !card) return;
+
+    let activeIndex = 0;
+    let autoScrollTimer = null;
+    let resumeTimer = null;
+    let scrollFrame = null;
+
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartScrollLeft = 0;
+
+    function getClosestSlideIndex() {
+      const carouselRect = carousel.getBoundingClientRect();
+      const carouselCenter =
+        carouselRect.left + carouselRect.width / 2;
+
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+
+      slides.forEach((slide, index) => {
+        const rect = slide.getBoundingClientRect();
+        const slideCenter = rect.left + rect.width / 2;
+        const distance = Math.abs(carouselCenter - slideCenter);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      return closestIndex;
+    }
+
+    function updateActiveSlide() {
+      activeIndex = getClosestSlideIndex();
+
+      slides.forEach((slide, index) => {
+        slide.classList.toggle(
+          "is-active",
+          index === activeIndex
+        );
+      });
+
+      if (activeIndex === slides.length - 1) {
+        card.classList.add("journey-complete");
+        stopAutoScroll();
+      }
+    }
+
+    function centerSlide(index, behavior = "smooth") {
+      const slide = slides[index];
+      if (!slide) return;
+
+      slide.scrollIntoView({
+        behavior,
+        block: "nearest",
+        inline: "center"
+      });
+    }
+
+    function stopAutoScroll() {
+      if (autoScrollTimer) {
+        clearInterval(autoScrollTimer);
+        autoScrollTimer = null;
+      }
+    }
+
+    function startAutoScroll() {
+      stopAutoScroll();
+
+      if (activeIndex >= slides.length - 1) return;
+
+      autoScrollTimer = setInterval(() => {
+        if (activeIndex >= slides.length - 1) {
+          stopAutoScroll();
+          return;
+        }
+
+        centerSlide(activeIndex + 1);
+      }, 4500);
+    }
+
+    function pauseAndResumeLater() {
+      stopAutoScroll();
+
+      if (resumeTimer) {
+        clearTimeout(resumeTimer);
+      }
+
+      resumeTimer = setTimeout(() => {
+        updateActiveSlide();
+        startAutoScroll();
+      }, 5000);
+    }
+
+    carousel.addEventListener(
+      "scroll",
+      () => {
+        if (scrollFrame) return;
+
+        scrollFrame = requestAnimationFrame(() => {
+          updateActiveSlide();
+          scrollFrame = null;
+        });
+      },
+      { passive: true }
+    );
+
+    carousel.addEventListener("pointerdown", event => {
+      isDragging = true;
+
+      dragStartX = event.clientX;
+      dragStartScrollLeft = carousel.scrollLeft;
+
+      carousel.classList.add("is-dragging");
+      carousel.setPointerCapture(event.pointerId);
+
+      pauseAndResumeLater();
+    });
+
+    carousel.addEventListener("pointermove", event => {
+      if (!isDragging) return;
+
+      const distance = event.clientX - dragStartX;
+
+      carousel.scrollLeft =
+        dragStartScrollLeft - distance;
+    });
+
+    function finishDragging(event) {
+      if (!isDragging) return;
+
+      isDragging = false;
+      carousel.classList.remove("is-dragging");
+
+      if (carousel.hasPointerCapture(event.pointerId)) {
+        carousel.releasePointerCapture(event.pointerId);
+      }
+
+      activeIndex = getClosestSlideIndex();
+      centerSlide(activeIndex);
+
+      pauseAndResumeLater();
+    }
+
+    carousel.addEventListener("pointerup", finishDragging);
+    carousel.addEventListener("pointercancel", finishDragging);
+    carousel.addEventListener("pointerleave", event => {
+      if (isDragging) {
+        finishDragging(event);
+      }
+    });
+
+    carousel.addEventListener("touchstart", pauseAndResumeLater, {
+      passive: true
+    });
+
+    carousel.addEventListener("wheel", pauseAndResumeLater, {
+      passive: true
+    });
+
+    slides.forEach(slide => {
+      slide.addEventListener("click", () => {
+        const index = Number(slide.dataset.adventureIndex);
+
+        centerSlide(index);
+        pauseAndResumeLater();
+      });
+    });
+
+    requestAnimationFrame(() => {
+      centerSlide(0, "auto");
+      updateActiveSlide();
+
+      setTimeout(() => {
+        startAutoScroll();
+      }, 1500);
+    });
+  }  
   /* ============================== */
 
   function setupMahjongGame(section) {
