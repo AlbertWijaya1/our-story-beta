@@ -213,7 +213,53 @@
               `).join("")}
             </div>
           `;
+        } 
+        else if (scene.type === "adventureCarousel") {
 
+          section.innerHTML = `
+            <div class="adventure-carousel-card">
+
+              <p class="small-text reveal-child delay-1">
+                ${scene.smallText}
+              </p>
+
+              <h1 class="reveal-child delay-2">
+                ${scene.title}
+              </h1>
+
+              <p class="intro-text reveal-child delay-3">
+                ${scene.intro}
+              </p>
+
+              <div
+                class="adventure-carousel"
+                aria-label="Our adventure memories"
+              >
+                ${scene.images.map((image, index) => `
+                  <div class="adventure-slide">
+                    <img
+                      src="${image}"
+                      alt="Adventure memory ${index + 1}"
+                      loading="lazy"
+                    >
+                  </div>
+                `).join("")}
+              </div>
+
+              <p class="adventure-swipe-hint">
+                Swipe to explore.
+              </p>
+
+              <p class="intro-text adventure-reflection">
+                ${scene.reflection}
+              </p>
+
+              <p class="intro-text adventure-final-text">
+                ${scene.finalText}
+              </p>
+
+            </div>
+          `;
         } else if (scene.type === "mahjong") {
 
         section.innerHTML = `

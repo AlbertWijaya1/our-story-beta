@@ -46,26 +46,26 @@ const scenes = {
     ]
   },  
   adventures: {
-    type: "chapter",
+    type: "adventureCarousel",
     smallText: "02",
     title: "Our Little Adventures",
-    next: "mahjongMemory",
-    moments: [
-      {
-        image: "images/adventures/01.jpg",
-        text: "We visited so many places this year."
-      },
-      {
-        image: "images/adventures/02.jpg",
-        text: "Some were far, some were simple, but every trip felt better with you beside me."
-      },
-      {
-        image: "images/adventures/03.jpg",
-        text: "Years from now, I may forget the roads we took, but I’ll remember who I was walking with."
-      }
-    ]
-  },
 
+    intro: "We visited so many places this year.",
+
+    images: [
+      "images/adventures/01.jpg",
+      "images/adventures/02.jpg",
+      "images/adventures/03.jpg"
+    ],
+
+    reflection:
+      "Some were far, some were simple, but every trip felt better with you beside me.",
+
+    finalText:
+      "Years from now, I may forget the roads we took, but I’ll remember who I was walking with.",
+
+    next: "mahjongMemory"
+  },  
   mahjongMemory: {
     type: "mahjong",
     smallText: "A little game we know too well",
