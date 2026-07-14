@@ -285,13 +285,21 @@
                 Deal.
             </button>
 
-            <button
+            <div class="mahjong-choice-row" id="mahjongChoiceRow" style="display:none">
+              <button
                 class="mahjong-action"
                 id="pongBtn"
-                style="display:none">
+                type="button">
                 PONG!
-            </button>
+              </button>
 
+              <button
+                class="mahjong-action mahjong-pass"
+                id="passBtn"
+                type="button">
+                PASS
+              </button>
+            </div>
             <p class="mahjong-instruction" id="mahjongInstruction">
               Tap Deal to begin.
             </p>
@@ -1260,13 +1268,29 @@
   function setupMahjongGame(section) {
     const hand = section.querySelector("#mahjongHand");
     const tableTile = section.querySelector("#tableTile");
+
     const pongBtn = section.querySelector("#pongBtn");
+    const passBtn = section.querySelector("#passBtn");
+    const choiceRow = section.querySelector("#mahjongChoiceRow");
+
     const dealBtn = section.querySelector("#dealBtn");
     const instruction = section.querySelector("#mahjongInstruction");
 
+    if (
+      !hand ||
+      !tableTile ||
+      !pongBtn ||
+      !passBtn ||
+      !choiceRow ||
+      !dealBtn ||
+      !instruction
+    ) {
+      console.error("Mahjong game elements are missing.");
+      return;
+    }
+
     let handTiles = [];
     let phase = "deal";
-
     const mahjongTileImages = {
       "🀇": {
         src: "images/mahjong/1wan.png",
@@ -1392,13 +1416,14 @@
           instruction.textContent = "Yi Dong.";
       }, 120);
       
-      setTimeout(() => {
-        tableTile.classList.remove("reveal-winning");
-        instruction.textContent = "Tap PONG to bring the tile home.";
+    setTimeout(() => {
+      tableTile.classList.remove("reveal-winning");
+      instruction.textContent = "What will you do?";
 
-        phase = "pong";
-        pongBtn.style.display = "inline-block";
-      }, 900);
+      phase = "pong";
+      choiceRow.style.display = "flex";
+    }, 900);
+    
     }, startingTiles.length * 115 + 1050);
   }
 
@@ -1479,11 +1504,11 @@
       setTimeout(() => {
         phase = "hu";
 
-        pongBtn.textContent = "HU!";
-        pongBtn.style.display = "inline-block";
+      pongBtn.textContent = "HU!";
+      passBtn.style.display = "none";
+      choiceRow.style.display = "flex";
 
-        instruction.textContent = "The winning tile is here. Tap HU.";
-
+      instruction.textContent = "The winning tile is here. Tap HU.";
         tableTile.classList.remove("reveal-winning");
       }, 850);
       }, 900);
@@ -1502,9 +1527,10 @@
     tableTile.className = "table-tile";
 
     pongBtn.textContent = "PONG!";
-    pongBtn.style.display = "none";
-    dealBtn.style.display = "inline-block";
+    passBtn.style.display = "inline-block";
+    choiceRow.style.display = "none";
 
+    dealBtn.style.display = "inline-block";
     instruction.textContent = "Tap Deal to begin.";
 
     renderHand();
@@ -1519,7 +1545,7 @@
     if (phase === "pong") {
       playMahjongSound("pong");
 
-      pongBtn.style.display = "none";
+      choiceRow.style.display = "none";
       instruction.textContent = "";
 
       tableTile.classList.add("fly-away");
@@ -1561,7 +1587,7 @@
 
         hand.classList.add("winning-hand");
 
-        pongBtn.style.display = "none";
+        choiceRow.style.display = "none";
 
         instruction.innerHTML = `
           <strong>HU!</strong><br><br>
@@ -1578,6 +1604,25 @@
         });
       }, 650);
 
+    }
+  });
+
+  passBtn.addEventListener("click", () => {
+    if (phase !== "pong") return;
+
+    instruction.innerHTML = `
+      Hey... you need to hit <strong>PONG</strong>, not PASS. 😌
+    `;
+
+    passBtn.classList.remove("pass-shake");
+
+    // Restart the animation even after repeated taps.
+    void passBtn.offsetWidth;
+
+    passBtn.classList.add("pass-shake");
+
+    if (navigator.vibrate) {
+      navigator.vibrate([30, 35, 30]);
     }
   });
     renderHand();
