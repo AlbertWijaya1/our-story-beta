@@ -1044,6 +1044,19 @@
 
     if (!carousel || !card) return;
 
+    let isCarouselVisible = true;
+
+    const carouselObserver = new IntersectionObserver(
+      entries => {
+        isCarouselVisible = entries[0].isIntersecting;
+      },
+      {
+        threshold: 0.05
+      }
+    );
+
+    carouselObserver.observe(card);
+
     const originalSlides = [
       ...carousel.querySelectorAll(".adventure-slide")
     ];
@@ -1138,6 +1151,8 @@
       }
     }
 
+    let lastActiveUpdate = 0;
+
     function animate(currentTime) {
       if (lastTime === null) {
         lastTime = currentTime;
@@ -1148,16 +1163,27 @@
 
       lastTime = currentTime;
 
-      if (!isPaused && !isDragging) {
+      if (
+        isCarouselVisible &&
+        !isPaused &&
+        !isDragging
+      ) {
         carousel.scrollLeft += speed * elapsedSeconds;
       }
+      if (isCarouselVisible) {
+        keepInsideInfiniteLoop();
+      }
 
-      keepInsideInfiniteLoop();
-      updateActiveSlide();
+      if (
+        isCarouselVisible &&
+        currentTime - lastActiveUpdate >= 100
+      ) {
+        updateActiveSlide();
+        lastActiveUpdate = currentTime;
+      }
 
       animationFrame = requestAnimationFrame(animate);
     }
-
     function pauseCarousel() {
       isPaused = true;
 
