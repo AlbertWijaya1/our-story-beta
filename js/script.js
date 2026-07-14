@@ -1423,7 +1423,7 @@
       phase = "pong";
       choiceRow.style.display = "flex";
     }, 900);
-    
+
     }, startingTiles.length * 115 + 1050);
   }
 
@@ -1433,9 +1433,8 @@
       hand.innerHTML = handTiles.map(tile => `
         <button
           class="mahjong-tile ${
-            phase === "discard" &&
-            (tile === "🀅" || tile === "🀄")
-              ? "discardable"
+            phase === "discard"
+              ? "discard-choice"
               : ""
           }"
           data-tile="${tile}"
@@ -1447,12 +1446,42 @@
       `).join("");
 
       if (phase === "discard") {
-        hand.querySelectorAll(".mahjong-tile.discardable").forEach(btn => {
+        hand.querySelectorAll(".mahjong-tile").forEach(btn => {
           btn.addEventListener("click", () => {
-            discardTile(btn.dataset.tile);
+            const selectedTile = btn.dataset.tile;
+
+            if (
+              selectedTile === "🀅" ||
+              selectedTile === "🀄"
+            ) {
+              discardTile(selectedTile);
+            } else {
+              rejectDiscard(btn);
+            }
           });
         });
       }
+    }
+
+    function rejectDiscard(tileButton) {
+      if (phase !== "discard") return;
+
+      tileButton.classList.remove("wrong-discard");
+
+      // Forces the animation to restart on repeated taps.
+      void tileButton.offsetWidth;
+
+      tileButton.classList.add("wrong-discard");
+
+      instruction.textContent = "Now discard one tile:";
+
+      if (navigator.vibrate) {
+        navigator.vibrate([35, 30, 35]);
+      }
+
+      setTimeout(() => {
+        tileButton.classList.remove("wrong-discard");
+      }, 520);
     }
 
     function discardTile(tile) {
@@ -1527,7 +1556,7 @@
     tableTile.className = "table-tile";
 
     pongBtn.textContent = "PONG!";
-    passBtn.style.display = "inline-block";
+    passBtn.style.display = "";
     choiceRow.style.display = "none";
 
     dealBtn.style.display = "inline-block";
@@ -1565,7 +1594,7 @@
           newTile.classList.add("dealt");
         }
 
-        instruction.innerHTML = `Now discard one tile: 🀅 or 🀄`;
+        instruction.innerHTML = `Now discard one tile`;
       }, 650);
     }
 
@@ -1611,7 +1640,7 @@
     if (phase !== "pong") return;
 
     instruction.innerHTML = `
-      Hey... you need to hit <strong>PONG</strong>, not PASS. 😌
+      Bek, itu ada yang bisa <strong>PONG</strong>, kok malah milih PASS. 😗
     `;
 
     passBtn.classList.remove("pass-shake");

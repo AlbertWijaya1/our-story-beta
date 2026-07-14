@@ -655,20 +655,40 @@ button:hover {
     box-shadow 0.25s ease;
 }
 
-.mahjong-tile.discardable {
+.mahjong-tile.discard-choice {
   cursor: pointer;
-  border-color: var(--gold);
-
-  box-shadow:
-    inset 2px 2px 3px rgba(255, 255, 255, 0.95),
-    inset -3px -4px 5px rgba(88, 66, 38, 0.2),
-    0 5px 0 #61725b,
-    0 9px 18px rgba(0, 0, 0, 0.42),
-    0 0 20px rgba(212, 175, 55, 0.22);
 }
 
-.mahjong-tile.discardable:hover {
-  transform: translateY(-7px);
+/* Every tile behaves identically, so there is no visual clue. */
+.mahjong-tile.discard-choice:hover {
+  border-color: rgba(255, 248, 220, 0.75);
+}
+
+.mahjong-tile.wrong-discard {
+  animation: wrongDiscardShake 0.5s ease;
+}
+
+@keyframes wrongDiscardShake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+
+  20% {
+    transform: translateX(-5px) rotate(-1deg);
+  }
+
+  40% {
+    transform: translateX(5px) rotate(1deg);
+  }
+
+  60% {
+    transform: translateX(-4px) rotate(-0.7deg);
+  }
+
+  80% {
+    transform: translateX(3px) rotate(0.5deg);
+  }
 }
 
 .mahjong-tile.dealt {
@@ -1089,7 +1109,7 @@ button:hover {
     min-width: 100px;
     padding: 13px 18px;
   }
-  
+
   .mahjong-action {
     min-width: 108px;
     margin-top: 20px;
