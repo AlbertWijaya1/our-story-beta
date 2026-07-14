@@ -138,10 +138,12 @@ button {
   transition: all 0.3s ease;
 }
 
-button:hover {
-  border-color: var(--gold);
-  box-shadow: 0 0 24px rgba(212, 175, 55, 0.18);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  button:hover {
+    border-color: var(--gold);
+    box-shadow: 0 0 24px rgba(212, 175, 55, 0.18);
+    transform: translateY(-2px);
+  }
 }
 
 .fade-out {
@@ -162,70 +164,460 @@ button:hover {
   }
 }
 
+/* =========================================
+   MEMORY BOX — LUXURY KEEPSAKE BOX
+========================================= */
+
 .memory-box {
-    position: relative;
-    width: 180px;
-    height: 120px;
-    margin: 20px auto 0;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    padding: 0;
-    transform-style: preserve-3d;
-  }
+  position: relative;
+
+  width: 190px;
+  height: 132px;
+
+  margin: 28px auto 0;
+  padding: 0;
+
+  border: none;
+  border-radius: 0;
+  background: transparent;
+
+  cursor: pointer;
+
+  transform-style: preserve-3d;
+  perspective: 700px;
+
+  isolation: isolate;
+
+  transition:
+    transform 0.45s cubic-bezier(.22, .61, .36, 1),
+    filter 0.45s ease;
+}
+
+/* Soft shadow beneath the entire box */
+.memory-box::before {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+
+  width: 145px;
+  height: 34px;
+
+  transform: translateX(-50%);
+
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.68);
+  filter: blur(18px);
+
+  opacity: 0.9;
+
+  pointer-events: none;
+  z-index: -2;
+}
+
+/* Very subtle resting atmosphere */
+.memory-box::after {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+
+  width: 170px;
+  height: 80px;
+
+  transform: translateX(-50%) scale(0.88);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      ellipse,
+      rgba(212, 175, 55, 0.11) 0%,
+      rgba(212, 175, 55, 0.035) 48%,
+      transparent 74%
+    );
+
+  filter: blur(22px);
+  opacity: 0.58;
+
+  pointer-events: none;
+  z-index: -1;
+
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+
+.box-body {
+  position: absolute;
+  left: 22px;
+  bottom: 10px;
+
+  width: 146px;
+  height: 77px;
+
+  border-radius: 7px 7px 19px 19px;
+
+  background:
+    /* Fine vertical wood grain */
+    repeating-linear-gradient(
+      88deg,
+      rgba(255, 255, 255, 0.012) 0px,
+      rgba(255, 255, 255, 0.012) 1px,
+      transparent 1px,
+      transparent 7px
+    ),
+
+    /* Soft reflected highlight */
+    radial-gradient(
+      ellipse at 50% 5%,
+      rgba(255, 202, 132, 0.13),
+      transparent 48%
+    ),
+
+    /* Walnut body */
+    linear-gradient(
+      90deg,
+      #24110b 0%,
+      #3a1f14 16%,
+      #50301f 50%,
+      #3a1f14 84%,
+      #24110b 100%
+    );
+  border: 1px solid rgba(201, 151, 58, 0.52);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 238, 205, 0.1),
+    inset 0 -20px 30px rgba(0, 0, 0, 0.28),
+    inset 9px 0 18px rgba(255, 255, 255, 0.018),
+    inset -9px 0 18px rgba(0, 0, 0, 0.14),
+
+    0 2px 0 rgba(255, 205, 108, 0.06),
+    0 20px 36px rgba(0, 0, 0, 0.55),
+    0 36px 60px rgba(0, 0, 0, 0.32);
+
+  overflow: visible;
+  z-index: 2;
+}
+
+/* Fine brass detail on the body */
+/* Fine brass inlay */
+.box-body::before {
+  content: "";
+
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 11px;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(235, 196, 104, 0.2) 15%,
+      rgba(235, 196, 104, 0.62) 50%,
+      rgba(235, 196, 104, 0.2) 85%,
+      transparent
+    );
+
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.32);
+
+  opacity: 0.8;
+}
+
+/* Luxury brass clasp */
+.box-body::after {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+  top: 23px;
+  width: 17px;
+  height: 10px;
   
+  transform: translateX(-50%);
+
+  border-radius: 2px 2px 6px 6px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #76531b 0%,
+      #d8b45d 24%,
+      #f0d486 48%,
+      #ae7f2d 75%,
+      #5e4217 100%
+    );
+
+  border: 1px solid rgba(255, 222, 139, 0.24);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 249, 217, 0.48),
+    inset 0 -3px 4px rgba(73, 44, 8, 0.38),
+    0 3px 7px rgba(0, 0, 0, 0.42);
+
+  z-index: 6;
+}
+
+.box-lid {
+  position: absolute;
+
+  left: 15px;
+  top: 40px;
+
+  width: 160px;
+  height: 36px;
+
+  border-radius: 14px 14px 5px 5px;
+
+  background:
+    repeating-linear-gradient(
+      88deg,
+      rgba(255, 255, 255, 0.014) 0px,
+      rgba(255, 255, 255, 0.014) 1px,
+      transparent 1px,
+      transparent 8px
+    ),
+
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(255, 211, 150, 0.13),
+      transparent 54%
+    ),
+
+    linear-gradient(
+      90deg,
+      #2b160e 0%,
+      #472819 17%,
+      #684126 50%,
+      #472819 83%,
+      #2b160e 100%
+    );
+
+  border: 1px solid rgba(205, 155, 62, 0.58);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 239, 210, 0.14),
+    inset 0 -13px 19px rgba(0, 0, 0, 0.22),
+    inset 7px 0 14px rgba(255, 255, 255, 0.02),
+    inset -8px 0 14px rgba(0, 0, 0, 0.13),
+
+    0 2px 0 rgba(252, 203, 111, 0.05),
+    0 9px 18px rgba(0, 0, 0, 0.34);
+
+  transform-origin: 50% 100%;
+  transform: rotateX(0deg) translateY(0);
+
+  transition:
+    transform 1.15s cubic-bezier(.22, .75, .2, 1),
+    box-shadow 0.75s ease,
+    filter 0.75s ease;
+
+  backface-visibility: hidden;
+  z-index: 5;
+}
+
+/* Subtle top highlight */
+/* Satin highlight across the lid */
+.box-lid::before {
+  content: "";
+
+  position: absolute;
+  left: 17px;
+  right: 17px;
+  top: 8px;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 225, 171, 0.18),
+      rgba(255, 225, 171, 0.5),
+      rgba(255, 225, 171, 0.18),
+      transparent
+    );
+
+  opacity: 0.68;
+}
+
+/* Fine brass rim at the lid seam */
+.box-lid::after {
+  content: "";
+
+  position: absolute;
+  left: 7px;
+  right: 7px;
+  bottom: 3px;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(85, 52, 12, 0.3),
+      rgba(224, 183, 83, 0.65),
+      rgba(252, 218, 133, 0.72),
+      rgba(224, 183, 83, 0.65),
+      rgba(85, 52, 12, 0.3)
+    );
+
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.45);
+
+  opacity: 0.74;
+}
+
+.box-glow {
+  position: absolute;
+
+  left: 50%;
+  top: 72px;
+
+  width: 116px;
+  height: 10px;
+
+  transform:
+    translateX(-50%)
+    scaleX(0.35)
+    scaleY(0.2);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      ellipse,
+      rgba(255, 231, 166, 0.88) 0%,
+      rgba(226, 175, 73, 0.44) 34%,
+      rgba(212, 175, 55, 0.11) 62%,
+      transparent 80%
+    );
+
+  filter: blur(5px);
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition:
+    transform 1.05s cubic-bezier(.22, .75, .2, 1),
+    opacity 0.75s ease,
+    filter 0.85s ease;
+
+  z-index: 4;
+}
+
+@keyframes memoryBoxBreath {
+  0%,
+  100% {
+    opacity: 0.48;
+    transform: translateX(-50%) scale(0.86);
+  }
+
+  50% {
+    opacity: 0.68;
+    transform: translateX(-50%) scale(0.94);
+  }
+}
+
+.memory-box:not(.open)::after {
+  animation: memoryBoxBreath 7s ease-in-out infinite;
+}
+
+.memory-box.open::after {
+  animation: none;
+}
+
+/* Desktop hover only */
+@media (hover: hover) and (pointer: fine) {
   .memory-box:hover {
     transform: translateY(-4px);
+    filter: brightness(1.06);
     box-shadow: none;
   }
-  
-  .box-body {
-    position: absolute;
-    bottom: 0;
-    left: 20px;
-    width: 140px;
-    height: 72px;
-    border-radius: 10px 10px 18px 18px;
-    background: linear-gradient(145deg, #5a351f, #2b1710);
-    border: 1px solid rgba(212, 175, 55, 0.35);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+
+  .memory-box:hover .box-lid {
+    filter: brightness(1.04);
+
+    box-shadow:
+      inset 0 1px 0 rgba(255, 239, 210, 0.16),
+      inset 0 -13px 19px rgba(0, 0, 0, 0.2),
+      0 11px 22px rgba(0, 0, 0, 0.38),
+      0 0 20px rgba(212, 175, 55, 0.045);
   }
-  
-  .box-lid {
-    position: absolute;
-    top: 20px;
-    left: 14px;
-    width: 152px;
-    height: 42px;
-    border-radius: 14px 14px 6px 6px;
-    background: linear-gradient(145deg, #6b4328, #351d12);
-    border: 1px solid rgba(212, 175, 55, 0.45);
-    transform-origin: bottom center;
-    transition: transform 1s ease;
-    z-index: 3;
+
+  .memory-box:hover::after {
+    opacity: 0.82;
+    transform: translateX(-50%) scale(1);
   }
-  
-  .box-glow {
-    position: absolute;
-    left: 50%;
-    bottom: 42px;
-    width: 90px;
-    height: 40px;
-    background: radial-gradient(circle, rgba(212, 175, 55, 0.9), transparent 70%);
-    transform: translateX(-50%) scale(0);
-    opacity: 0;
-    transition: all 1s ease;
-    z-index: 2;
+}
+
+/* Open state */
+.memory-box.open {
+  transform: translateY(-2px);
+  pointer-events: none;
+}
+
+.memory-box.open .box-lid {
+  transform:
+    translateY(-13px)
+    rotateX(-68deg);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -11px 18px rgba(0, 0, 0, 0.12),
+    0 16px 28px rgba(0, 0, 0, 0.2);
+}
+
+.memory-box.open .box-glow {
+  opacity: 0.92;
+
+  transform:
+    translateX(-50%)
+    translateY(-10px)
+    scaleX(1.45)
+    scaleY(1.1);
+
+  filter: blur(9px);
+}
+
+.memory-box.open .box-body::after {
+  animation: claspRelease 0.32s ease forwards;
+}
+
+@keyframes claspRelease {
+  0% {
+    transform: translateX(-50%) translateY(0);
+    filter: brightness(1);
   }
-  
-  .memory-box.open .box-lid {
-    transform: rotateX(70deg) translateY(-18px);
+
+  45% {
+    transform: translateX(-50%) translateY(2px);
+    filter: brightness(1.35);
   }
-  
-  .memory-box.open .box-glow {
-    transform: translateX(-50%) scale(2.4);
-    opacity: 1;
+
+  100% {
+    transform: translateX(-50%) translateY(1px);
+    filter: brightness(1.08);
   }
+}
+
+.memory-box.open::after {
+  opacity: 1;
+
+  transform:
+    translateX(-50%)
+    scale(1.22);
+}
 
   .photo-card {
     width: 100%;
@@ -1000,6 +1392,18 @@ button:hover {
 /* Mobile Mahjong */
 
 @media (max-width: 600px) {
+
+  .memory-box {
+    width: 176px;
+    height: 124px;
+    margin-top: 26px;
+    transform: scale(0.94);
+  }
+
+  .memory-box.open {
+    transform: translateY(-2px) scale(0.94);
+  }
+
   .story-section[data-scene="mahjongMemory"] {
     width: 100%;
     padding-left: 6px;

@@ -72,7 +72,7 @@
       unlockExtraAudio();
       startBackgroundMusic();      setTimeout(() => {
         renderStory();
-      }, 1200);
+      }, 1650);
     });
   }
 
