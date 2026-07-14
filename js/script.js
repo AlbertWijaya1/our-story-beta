@@ -702,33 +702,38 @@
     if (!sections.length) return;
 
     let ticking = false;
+    let activeScene = null;
 
     function updateActiveMusicScene() {
-      const triggerPoint = window.innerHeight * 0.5;
+      // Music changes when a section reaches about
+      // 35% down from the top of the screen.
+      const triggerPoint = window.innerHeight * 0.35;
 
-      let activeSection = sections[0];
-      let closestDistance = Infinity;
+      let selectedSection = sections[0];
 
       sections.forEach(section => {
         const rect = section.getBoundingClientRect();
 
-        const sectionCenter =
-          rect.top + rect.height / 2;
+        /*
+          Select the latest section whose top has passed
+          the trigger line.
 
-        const distance =
-          Math.abs(sectionCenter - triggerPoint);
-
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          activeSection = section;
+          This works even when a section is very tall.
+        */
+        if (rect.top <= triggerPoint) {
+          selectedSection = section;
         }
       });
 
-      const activeScene = activeSection.dataset.scene;
+      const nextScene = selectedSection.dataset.scene;
 
-      console.log("Current music scene:", activeScene);
+      if (nextScene !== activeScene) {
+        activeScene = nextScene;
 
-      updateMusicForScene(activeScene);
+        console.log("Current music scene:", activeScene);
+
+        updateMusicForScene(activeScene);
+      }
 
       ticking = false;
     }
@@ -737,6 +742,7 @@
       if (ticking) return;
 
       ticking = true;
+
       requestAnimationFrame(updateActiveMusicScene);
     }
 
