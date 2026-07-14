@@ -1097,15 +1097,23 @@
 
     let setWidth = 0;
 
-    const speed = 18; // pixels per second — increase slightly if too slow
+    /*
+      Keep a precise floating-point position.
+
+      Reading carousel.scrollLeft every frame can discard
+      fractional movement on some desktop browsers.
+    */
+    let autoScrollPosition = 0;
+
+    const speed = 18;
 
     function measureCarousel() {
       setWidth = carousel.scrollWidth / 3;
 
-      // Begin at the original middle set
-      carousel.scrollLeft = setWidth;
+      // Begin at the original middle set.
+      autoScrollPosition = setWidth;
+      carousel.scrollLeft = autoScrollPosition;
     }
-
     function updateActiveSlide() {
       const allSlides = [
         ...carousel.querySelectorAll(".adventure-slide")
@@ -1140,17 +1148,16 @@
     function keepInsideInfiniteLoop() {
       if (!setWidth) return;
 
-      // Entered the third set: quietly return to middle set
-      if (carousel.scrollLeft >= setWidth * 2) {
-        carousel.scrollLeft -= setWidth;
+      if (autoScrollPosition >= setWidth * 2) {
+        autoScrollPosition -= setWidth;
+        carousel.scrollLeft = autoScrollPosition;
       }
 
-      // Entered the first set: quietly return to middle set
-      if (carousel.scrollLeft <= 0) {
-        carousel.scrollLeft += setWidth;
+      if (autoScrollPosition <= 0) {
+        autoScrollPosition += setWidth;
+        carousel.scrollLeft = autoScrollPosition;
       }
     }
-
     let lastActiveUpdate = 0;
 
     function animate(currentTime) {
@@ -1168,7 +1175,8 @@
         !isPaused &&
         !isDragging
       ) {
-        carousel.scrollLeft += speed * elapsedSeconds;
+        autoScrollPosition += speed * elapsedSeconds;
+        carousel.scrollLeft = autoScrollPosition;
       }
       if (isCarouselVisible) {
         keepInsideInfiniteLoop();
@@ -1176,7 +1184,7 @@
 
       if (
         isCarouselVisible &&
-        currentTime - lastActiveUpdate >= 100
+        currentTime - lastActiveUpdate >= 120
       ) {
         updateActiveSlide();
         lastActiveUpdate = currentTime;
@@ -1222,11 +1230,12 @@
 
       const movement = event.clientX - dragStartX;
 
-      carousel.scrollLeft =
-        dragStartScrollLeft - movement;
+    autoScrollPosition =
+      dragStartScrollLeft - movement;
 
-      keepInsideInfiniteLoop();
-    });
+    carousel.scrollLeft = autoScrollPosition;
+
+    keepInsideInfiniteLoop();    });
 
     function finishDragging(event) {
       if (!isDragging) return;
@@ -1272,7 +1281,14 @@
     carousel.addEventListener(
       "scroll",
       () => {
-        keepInsideInfiniteLoop();
+        /*
+          Native phone scrolling and manual interaction can move
+          the element independently, so synchronize our precise value.
+        */
+        if (isPaused || isDragging) {
+          autoScrollPosition = carousel.scrollLeft;
+          keepInsideInfiniteLoop();
+        }
       },
       { passive: true }
     );
