@@ -695,33 +695,63 @@
   }
 
   function setupMusicSceneObserver() {
-    const sections = document.querySelectorAll(".story-section[data-scene]");
+    const sections = [
+      ...document.querySelectorAll(".story-section[data-scene]")
+    ];
 
     if (!sections.length) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntries = entries
-          .filter(entry =>
-            entry.isIntersecting &&
-            entry.intersectionRatio >= 0.4
-          )
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (!visibleEntries.length) return;
+    let ticking = false;
 
-        const activeScene = visibleEntries[0].target.dataset.scene;
+    function updateActiveMusicScene() {
+      const triggerPoint = window.innerHeight * 0.5;
 
-        console.log("Current music scene:", activeScene);
+      let activeSection = sections[0];
+      let closestDistance = Infinity;
 
-        updateMusicForScene(activeScene);
-      },
-      {
-        threshold: [0.25, 0.4, 0.55, 0.7],
-        rootMargin: "-25% 0px -25% 0px"
-      }
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+
+        const sectionCenter =
+          rect.top + rect.height / 2;
+
+        const distance =
+          Math.abs(sectionCenter - triggerPoint);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          activeSection = section;
+        }
+      });
+
+      const activeScene = activeSection.dataset.scene;
+
+      console.log("Current music scene:", activeScene);
+
+      updateMusicForScene(activeScene);
+
+      ticking = false;
+    }
+
+    function requestMusicUpdate() {
+      if (ticking) return;
+
+      ticking = true;
+      requestAnimationFrame(updateActiveMusicScene);
+    }
+
+    window.addEventListener(
+      "scroll",
+      requestMusicUpdate,
+      { passive: true }
     );
 
-    sections.forEach(section => observer.observe(section));
+    window.addEventListener(
+      "resize",
+      requestMusicUpdate
+    );
+
+    updateActiveMusicScene();
   }
 
   function setupDustEngine() {

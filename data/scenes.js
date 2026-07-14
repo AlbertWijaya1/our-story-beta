@@ -71,7 +71,7 @@ const scenes = {
     smallText: "A little game we know too well",
     title: "One Last Round?",
     body: "We played so many random Mahjong nights together. So before we continue...",
-    next: "funnyUs"
+    next: "afterMahjongBreath"
   },
 
   afterMahjongBreath: {
