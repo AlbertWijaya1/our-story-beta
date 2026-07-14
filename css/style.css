@@ -1425,3 +1425,74 @@ button:hover {
       calc((100vw - var(--adventure-width)) / 2);
   }
 }
+
+.mahjong-tile,
+.table-tile,
+.mahjong-discarded-tile {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #fffdf4 0%,
+      #f3ead7 58%,
+      #d8c8a9 100%
+    );
+
+  border: 1px solid rgba(255, 248, 220, 0.75);
+
+  box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.95),
+    inset -3px -4px 5px rgba(88, 66, 38, 0.2),
+    0 5px 0 #61725b,
+    0 9px 18px rgba(0, 0, 0, 0.42);
+
+  overflow: hidden;
+}
+
+.mahjong-tile {
+  width: 42px;
+  height: 58px;
+  flex: 0 0 auto;
+  border-radius: 8px;
+}
+
+.table-tile {
+  width: 82px;
+  height: 106px;
+  margin: 34px auto 30px;
+  padding: 10px;
+  border-radius: 13px;
+}
+
+.mahjong-discarded-tile {
+  width: 42px;
+  height: 58px;
+  border-radius: 8px;
+}
+
+.mahjong-tile-image {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  pointer-events: none;
+  user-select: none;
+
+  transform: none;
+  animation: none;
+  filter: none;
+}
+
+.mahjong-tile-back-image {
+  object-fit: cover;
+}

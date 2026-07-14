@@ -1267,6 +1267,86 @@
     let handTiles = [];
     let phase = "deal";
 
+    const mahjongTileImages = {
+      "🀇": {
+        src: "images/mahjong/1wan.png",
+        alt: "One Character"
+      },
+
+      "🀈": {
+        src: "images/mahjong/2wan.png",
+        alt: "Two Character"
+      },
+
+      "🀉": {
+        src: "images/mahjong/3wan.png",
+        alt: "Three Character"
+      },
+
+      "🀊": {
+        src: "images/mahjong/4wan.png",
+        alt: "Four Character"
+      },
+
+      "🀋": {
+        src: "images/mahjong/5wan.png",
+        alt: "Five Character"
+      },
+
+      "🀌": {
+        src: "images/mahjong/6wan.png",
+        alt: "Six Character"
+      },
+
+      "🀍": {
+        src: "images/mahjong/7wan.png",
+        alt: "Seven Character"
+      },
+
+      "🀎": {
+        src: "images/mahjong/8wan.png",
+        alt: "Eight Character"
+      },
+
+      "🀏": {
+        src: "images/mahjong/9wan.png",
+        alt: "Nine Character"
+      },
+
+      "🀙": {
+        src: "images/mahjong/1dong.png",
+        alt: "One Circle"
+      },
+
+      "🀅": {
+        src: "images/mahjong/fachai.png",
+        alt: "Green Dragon"
+      },
+
+      "🀄": {
+        src: "images/mahjong/hongzhong.png",
+        alt: "Red Dragon"
+      }
+    };
+
+    function createMahjongTileImage(tile) {
+      const tileData = mahjongTileImages[tile];
+
+      if (!tileData) {
+        console.warn("Missing Mahjong tile image:", tile);
+        return "";
+      }
+
+      return `
+        <img
+          class="mahjong-tile-image"
+          src="${tileData.src}"
+          alt="${tileData.alt}"
+          draggable="false"
+        >
+      `;
+    }
+
     const tileOrder = ["🀇","🀈","🀉","🀊","🀋","🀌","🀍","🀎","🀏","🀙","🀅","🀄"];
 
     function sortHand() {
@@ -1302,7 +1382,7 @@
     });
 
     setTimeout(() => {
-      tableTile.textContent = "🀙";
+      tableTile.innerHTML = createMahjongTileImage("🀙");
       tableTile.classList.add("reveal-winning", "glow");
 
       instruction.textContent = "Yi Dong.";
@@ -1326,15 +1406,25 @@
       sortHand();
 
       hand.innerHTML = handTiles.map(tile => `
-        <button class="mahjong-tile ${phase === "discard" && (tile === "🀅" || tile === "🀄") ? "discardable" : ""}">
-          ${tile}
+        <button
+          class="mahjong-tile ${
+            phase === "discard" &&
+            (tile === "🀅" || tile === "🀄")
+              ? "discardable"
+              : ""
+          }"
+          data-tile="${tile}"
+          type="button"
+          aria-label="${mahjongTileImages[tile]?.alt || "Mahjong tile"}"
+        >
+          ${createMahjongTileImage(tile)}
         </button>
       `).join("");
 
       if (phase === "discard") {
         hand.querySelectorAll(".mahjong-tile.discardable").forEach(btn => {
           btn.addEventListener("click", () => {
-            discardTile(btn.textContent.trim());
+            discardTile(btn.dataset.tile);
           });
         });
       }
@@ -1359,7 +1449,14 @@
 
       const discardArea = document.createElement("div");
       discardArea.className = "mahjong-discard-area";
-      discardArea.innerHTML = `<div class="mahjong-discarded-tile">${tile}</div>`;
+      discardArea.innerHTML = `
+        <div
+          class="mahjong-discarded-tile"
+          aria-label="${mahjongTileImages[tile]?.alt || "Discarded Mahjong tile"}"
+        >
+          ${createMahjongTileImage(tile)}
+        </div>
+      `;
 
       hand.after(discardArea);
 
@@ -1368,7 +1465,7 @@
       setTimeout(() => {
         const winningTile = tile === "🀄" ? "🀅" : "🀄";
 
-        tableTile.textContent = winningTile;
+        tableTile.innerHTML = createMahjongTileImage(winningTile);
         tableTile.classList.add("glow", "reveal-winning");
         tableTile.dataset.winningTile = winningTile;
 
@@ -1437,8 +1534,7 @@
         renderHand();
 
         const newTile = [...hand.querySelectorAll(".mahjong-tile")]
-          .find(tile => tile.textContent.trim() === "🀙");
-
+          .find(tile => tile.dataset.tile === "🀙");
         if (newTile) {
           newTile.classList.add("dealt");
         }
