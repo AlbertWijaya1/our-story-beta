@@ -1976,3 +1976,136 @@ button:hover {
     font-size: 0.8rem;
   }
 }
+
+/* =========================================
+   FINAL MOBILE MAHJONG OVERRIDES
+   Must remain at the absolute bottom
+========================================= */
+
+@media (max-width: 600px) {
+  .story-section[data-scene="mahjongMemory"] {
+    width: 100%;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .mahjong-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 38px 8px 34px;
+    border-radius: 26px;
+    overflow: hidden;
+  }
+
+  .mahjong-card::after {
+    inset: 7px;
+    border-radius: 20px;
+  }
+
+  .mahjong-card h1 {
+    font-size: clamp(3.1rem, 16vw, 4.3rem);
+    line-height: 0.9;
+    margin-bottom: 24px;
+  }
+
+  .mahjong-card > .small-text {
+    padding: 0 8px;
+    font-size: 0.78rem;
+  }
+
+  .mahjong-card > .intro-text {
+    max-width: 340px;
+    padding: 0 10px;
+    margin-bottom: 28px;
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+
+  .table-tile {
+    width: 68px;
+    height: 88px;
+    margin: 28px auto 30px;
+    padding: 7px;
+    border-radius: 11px;
+  }
+
+  .mahjong-hand {
+    display: grid;
+    grid-template-columns: repeat(14, minmax(0, 1fr));
+    align-items: end;
+
+    width: 100%;
+    max-width: 100%;
+
+    gap: 2px;
+    padding: 8px 1px 10px;
+    margin: 22px auto 18px;
+
+    overflow: hidden;
+  }
+
+  .mahjong-tile {
+    width: 100%;
+    height: auto;
+    min-width: 0;
+    max-width: 100%;
+
+    aspect-ratio: 42 / 58;
+
+    padding: 1px;
+    border-radius: 5px;
+
+    box-shadow:
+      inset 1px 1px 2px rgba(255, 255, 255, 0.9),
+      inset -1px -2px 3px rgba(88, 66, 38, 0.18),
+      0 3px 0 #61725b,
+      0 5px 8px rgba(0, 0, 0, 0.34);
+  }
+
+  .mahjong-tile-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .mahjong-discard-area {
+    height: 56px;
+    margin: 10px auto 16px;
+  }
+
+  .mahjong-discarded-tile {
+    width: 34px;
+    height: 47px;
+    padding: 2px;
+    border-radius: 6px;
+  }
+
+  .mahjong-action {
+    min-width: 108px;
+    margin-top: 20px;
+    padding: 13px 23px;
+    font-size: 0.8rem;
+    letter-spacing: 0.13em;
+  }
+
+  #huBtn {
+    min-width: 116px;
+    padding: 14px 26px;
+    font-size: 0.84rem;
+  }
+
+  .mahjong-instruction {
+    max-width: 310px;
+    padding: 0 12px;
+    margin-top: 24px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .mahjong-replay {
+    margin-top: 12px;
+    padding: 12px 22px;
+    font-size: 0.8rem;
+  }
+}
