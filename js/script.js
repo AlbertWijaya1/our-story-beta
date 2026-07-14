@@ -1421,6 +1421,11 @@
       instruction.textContent = "What will you do?";
 
       phase = "pong";
+
+      passBtn.classList.remove("pass-shake");
+      passBtn.blur();
+      pongBtn.blur();
+
       choiceRow.style.display = "flex";
     }, 900);
 
