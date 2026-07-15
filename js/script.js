@@ -1038,24 +1038,12 @@
 
     sound.play().catch(() => {});
   }
+
   function setupAdventureCarousel(section) {
     const carousel = section.querySelector(".adventure-carousel");
     const card = section.querySelector(".adventure-carousel-card");
 
     if (!carousel || !card) return;
-
-    let isCarouselVisible = true;
-
-    const carouselObserver = new IntersectionObserver(
-      entries => {
-        isCarouselVisible = entries[0].isIntersecting;
-      },
-      {
-        threshold: 0.05
-      }
-    );
-
-    carouselObserver.observe(card);
 
     const originalSlides = [
       ...carousel.querySelectorAll(".adventure-slide")
@@ -1064,14 +1052,12 @@
     if (originalSlides.length < 2) return;
 
     /*
-      Create three identical sets:
+      Build three identical sets:
 
-      cloned set
-      original set
-      cloned set
+      clone set | original set | clone set
 
-      We begin in the middle set, allowing the carousel
-      to wrap seamlessly in either direction.
+      We stay around the middle set and silently jump
+      by exactly one set when entering either outer set.
     */
 
     const beforeFragment = document.createDocumentFragment();
@@ -1085,42 +1071,127 @@
     carousel.prepend(beforeFragment);
     carousel.append(afterFragment);
 
+    const originalCount = originalSlides.length;
+
     let animationFrame = null;
     let lastTime = null;
+    let lastActiveUpdate = 0;
     let resumeTimer = null;
 
     let isPaused = false;
     let isDragging = false;
+    let isCarouselVisible = true;
 
     let dragStartX = 0;
     let dragStartScrollLeft = 0;
 
-    let setWidth = 0;
+    let cycleWidth = 0;
+    let firstSetPosition = 0;
+    let middleSetPosition = 0;
+    let thirdSetPosition = 0;
 
     /*
-      Keep a precise floating-point position.
-
-      Reading carousel.scrollLeft every frame can discard
-      fractional movement on some desktop browsers.
+      Keep our own floating-point position so slow automatic
+      movement remains smooth on desktop.
     */
     let autoScrollPosition = 0;
 
-    const speed = 18;
+    const speed = 24;
 
-    function measureCarousel() {
-      setWidth = carousel.scrollWidth / 3;
+    const carouselObserver = new IntersectionObserver(
+      entries => {
+        isCarouselVisible = entries[0].isIntersecting;
 
-      // Begin at the original middle set.
-      autoScrollPosition = setWidth;
-      carousel.scrollLeft = autoScrollPosition;
+        /*
+          Prevent a large time jump when returning
+          to the carousel after it was off-screen.
+        */
+        if (isCarouselVisible) {
+          lastTime = null;
+        }
+      },
+      {
+        threshold: 0.05
+      }
+    );
+
+    carouselObserver.observe(card);
+
+    function getCenteredPosition(slide) {
+      return (
+        slide.offsetLeft -
+        (carousel.clientWidth - slide.offsetWidth) / 2
+      );
     }
+
+    function measureCarousel(preserveCurrentPosition = false) {
+      const allSlides = [
+        ...carousel.querySelectorAll(".adventure-slide")
+      ];
+
+      const firstSetFirstSlide = allSlides[0];
+      const middleSetFirstSlide = allSlides[originalCount];
+      const thirdSetFirstSlide = allSlides[originalCount * 2];
+
+      if (
+        !firstSetFirstSlide ||
+        !middleSetFirstSlide ||
+        !thirdSetFirstSlide
+      ) {
+        return;
+      }
+
+      firstSetPosition = getCenteredPosition(firstSetFirstSlide);
+      middleSetPosition = getCenteredPosition(middleSetFirstSlide);
+      thirdSetPosition = getCenteredPosition(thirdSetFirstSlide);
+
+      /*
+        Exact distance between identical sets.
+
+        This automatically includes slide width and gap,
+        while avoiding errors from carousel side padding.
+      */
+      cycleWidth = middleSetPosition - firstSetPosition;
+
+      if (!preserveCurrentPosition) {
+        autoScrollPosition = middleSetPosition;
+        carousel.scrollLeft = autoScrollPosition;
+      } else {
+        autoScrollPosition = carousel.scrollLeft;
+        keepInsideInfiniteLoop();
+      }
+    }
+
+    function keepInsideInfiniteLoop() {
+      if (!cycleWidth) return;
+
+      /*
+        Entered the third copy:
+        move backward by exactly one identical cycle.
+      */
+      if (autoScrollPosition >= thirdSetPosition) {
+        autoScrollPosition -= cycleWidth;
+        carousel.scrollLeft = autoScrollPosition;
+        return;
+      }
+
+      /*
+        Entered the first copy:
+        move forward by exactly one identical cycle.
+      */
+      if (autoScrollPosition <= firstSetPosition) {
+        autoScrollPosition += cycleWidth;
+        carousel.scrollLeft = autoScrollPosition;
+      }
+    }
+
     function updateActiveSlide() {
       const allSlides = [
         ...carousel.querySelectorAll(".adventure-slide")
       ];
 
       const carouselRect = carousel.getBoundingClientRect();
-      const center =
+      const carouselCenter =
         carouselRect.left + carouselRect.width / 2;
 
       let closestSlide = null;
@@ -1129,7 +1200,9 @@
       allSlides.forEach(slide => {
         const rect = slide.getBoundingClientRect();
         const slideCenter = rect.left + rect.width / 2;
-        const distance = Math.abs(center - slideCenter);
+        const distance = Math.abs(
+          carouselCenter - slideCenter
+        );
 
         if (distance < closestDistance) {
           closestDistance = distance;
@@ -1145,28 +1218,15 @@
       });
     }
 
-    function keepInsideInfiniteLoop() {
-      if (!setWidth) return;
-
-      if (autoScrollPosition >= setWidth * 2) {
-        autoScrollPosition -= setWidth;
-        carousel.scrollLeft = autoScrollPosition;
-      }
-
-      if (autoScrollPosition <= 0) {
-        autoScrollPosition += setWidth;
-        carousel.scrollLeft = autoScrollPosition;
-      }
-    }
-    let lastActiveUpdate = 0;
-
     function animate(currentTime) {
       if (lastTime === null) {
         lastTime = currentTime;
       }
 
-      const elapsedSeconds =
-        Math.min((currentTime - lastTime) / 1000, 0.05);
+      const elapsedSeconds = Math.min(
+        (currentTime - lastTime) / 1000,
+        0.05
+      );
 
       lastTime = currentTime;
 
@@ -1177,8 +1237,7 @@
       ) {
         autoScrollPosition += speed * elapsedSeconds;
         carousel.scrollLeft = autoScrollPosition;
-      }
-      if (isCarouselVisible) {
+
         keepInsideInfiniteLoop();
       }
 
@@ -1192,11 +1251,13 @@
 
       animationFrame = requestAnimationFrame(animate);
     }
+
     function pauseCarousel() {
       isPaused = true;
 
       if (resumeTimer) {
         clearTimeout(resumeTimer);
+        resumeTimer = null;
       }
     }
 
@@ -1206,15 +1267,24 @@
       }
 
       resumeTimer = setTimeout(() => {
+        autoScrollPosition = carousel.scrollLeft;
+        keepInsideInfiniteLoop();
+
+        lastTime = null;
         isPaused = false;
       }, 3000);
     }
 
     /*
-      Desktop mouse dragging
+      Desktop mouse dragging.
+
+      Phone swiping remains native because this only responds
+      to an actual mouse pointer.
     */
 
     carousel.addEventListener("pointerdown", event => {
+      if (event.pointerType !== "mouse") return;
+
       isDragging = true;
       pauseCarousel();
 
@@ -1226,19 +1296,29 @@
     });
 
     carousel.addEventListener("pointermove", event => {
-      if (!isDragging) return;
+      if (
+        event.pointerType !== "mouse" ||
+        !isDragging
+      ) {
+        return;
+      }
 
       const movement = event.clientX - dragStartX;
 
-    autoScrollPosition =
-      dragStartScrollLeft - movement;
+      autoScrollPosition =
+        dragStartScrollLeft - movement;
 
-    carousel.scrollLeft = autoScrollPosition;
-
-    keepInsideInfiniteLoop();    });
+      carousel.scrollLeft = autoScrollPosition;
+      keepInsideInfiniteLoop();
+    });
 
     function finishDragging(event) {
-      if (!isDragging) return;
+      if (
+        event.pointerType !== "mouse" ||
+        !isDragging
+      ) {
+        return;
+      }
 
       isDragging = false;
       carousel.classList.remove("is-dragging");
@@ -1247,7 +1327,10 @@
         carousel.releasePointerCapture(event.pointerId);
       }
 
+      autoScrollPosition = carousel.scrollLeft;
       keepInsideInfiniteLoop();
+      updateActiveSlide();
+
       resumeCarouselLater();
     }
 
@@ -1255,10 +1338,7 @@
     carousel.addEventListener("pointercancel", finishDragging);
 
     /*
-      Phone touch interaction
-
-      Native touch scrolling handles the actual swipe.
-      These events only pause and resume the automatic movement.
+      Native phone swiping
     */
 
     carousel.addEventListener(
@@ -1272,39 +1352,61 @@
     carousel.addEventListener(
       "touchend",
       () => {
+        autoScrollPosition = carousel.scrollLeft;
         keepInsideInfiniteLoop();
+        updateActiveSlide();
+
         resumeCarouselLater();
       },
       { passive: true }
     );
 
     carousel.addEventListener(
+      "touchcancel",
+      () => {
+        autoScrollPosition = carousel.scrollLeft;
+        keepInsideInfiniteLoop();
+
+        resumeCarouselLater();
+      },
+      { passive: true }
+    );
+
+    /*
+      Keep the floating-point position synchronized while the
+      user performs native scrolling.
+    */
+
+    carousel.addEventListener(
       "scroll",
       () => {
-        /*
-          Native phone scrolling and manual interaction can move
-          the element independently, so synchronize our precise value.
-        */
         if (isPaused || isDragging) {
           autoScrollPosition = carousel.scrollLeft;
-          keepInsideInfiniteLoop();
         }
       },
       { passive: true }
     );
 
     window.addEventListener("resize", () => {
-      measureCarousel();
-    });
-
-    // Wait until the browser has calculated all slide dimensions
-    requestAnimationFrame(() => {
-      measureCarousel();
+      measureCarousel(true);
       updateActiveSlide();
-
-      animationFrame = requestAnimationFrame(animate);
     });
-  }  
+
+    /*
+      Wait for layout and images before measuring.
+    */
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        measureCarousel(false);
+        updateActiveSlide();
+
+        animationFrame =
+          requestAnimationFrame(animate);
+      });
+    });
+  }
+
   /* ============================== */
 
   function setupMahjongGame(section) {
