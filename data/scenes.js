@@ -40,7 +40,10 @@ const scenes = {
         text: "But somehow, our ordinary routines became some of my favorite memories."
       },
       {
-        image: "images/everyday-us/03.jpg",
+        images: [
+          "images/everyday-us/kite-left.jpg",
+          "images/everyday-us/kite-right.jpg"
+        ],
         text: "Not because the days were special. Because you were there."
       }
     ]

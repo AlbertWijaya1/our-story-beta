@@ -312,18 +312,42 @@
             <p class="small-text reveal-child delay-1">${scene.smallText}</p>
             <h1 class="reveal-child delay-2">${scene.title}</h1>
       
-            ${scene.moments.map(moment => `
-              <div class="chapter-moment reveal">
-                <div class="memory-frame reveal-child delay-1">
-                  <div class="memory-light"></div>
-                  <div class="photo-placeholder">
-                    <img src="${moment.image}" alt="${scene.title}">
-                  </div>
-                </div>
-                <p class="intro-text reveal-child delay-2">${moment.text}</p>
-              </div>
-            `).join("")}
+        ${scene.moments.map(moment => `
+          <div class="chapter-moment reveal">
+            <div class="memory-frame reveal-child delay-1">
+              <div class="memory-light"></div>
+
+              ${
+                moment.images
+                  ? `
+                    <div class="memory-pair">
+                      ${moment.images.map((image, index) => `
+                        <div class="memory-pair-photo">
+                          <img
+                            src="${image}"
+                            alt="${scene.title} — paired memory ${index + 1}"
+                          >
+                        </div>
+                      `).join("")}
+                    </div>
+                  `
+                  : `
+                    <div class="photo-placeholder">
+                      <img
+                        src="${moment.image}"
+                        alt="${scene.title}"
+                      >
+                    </div>
+                  `
+              }
+            </div>
+
+            <p class="intro-text reveal-child delay-2">
+              ${moment.text}
+            </p>
           </div>
+        `).join("")}
+            </div>
         `;
       
       } else if(scene.type === "photo") {
