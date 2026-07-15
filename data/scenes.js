@@ -36,7 +36,7 @@ const scenes = {
         text: "I used to think the gym was only a place to work out."
       },
       {
-        image: "images/everyday-us/02.jpg",
+        image: "images/everyday-us/02-srgb.jpg",
         text: "But somehow, our ordinary routines became some of my favorite memories."
       },
       {
