@@ -41,7 +41,7 @@ const scenes = {
       },
       {
         images: [
-          "images/everyday-us/kite-left.jpg",
+          "images/everyday-us/kite-left-srgb.jpg",
           "images/everyday-us/kite-right.jpg"
         ],
         text: "Not because the days were special. Because you were there."
