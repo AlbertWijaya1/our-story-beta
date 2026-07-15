@@ -2208,9 +2208,20 @@ button {
 
 .adventure-reflection {
   margin-top: 46px;
+  opacity: 0;
+  transform: translateY(24px);
+  filter: blur(4px);
 
-  opacity: 1;
-  transform: translateY(0);
+  transition:
+    opacity 1.1s ease,
+    transform 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1.1s ease;
+}
+
+.reveal.adventure-reflection.active {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
 }
 
 .adventure-final-text {
@@ -2232,7 +2243,24 @@ button {
     clamp(1.8rem, 7vw, 2.8rem);
 
   line-height: 1.25;
+
+
+  opacity: 0;
+  transform: translateY(34px) scale(0.985);
+  filter: blur(6px);
+
+  transition:
+    opacity 1.35s ease,
+    transform 1.35s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1.35s ease;
 }
+
+.reveal.adventure-final-text.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+}
+
 
 @media (max-width: 600px) {
   .adventure-carousel {

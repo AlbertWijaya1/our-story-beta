@@ -259,14 +259,13 @@
                 Swipe to explore.
               </p>
 
-              <p class="intro-text adventure-reflection">
+              <p class="intro-text adventure-reflection reveal">
                 ${scene.reflection}
               </p>
 
-              <p class="adventure-final-text">
+              <p class="adventure-final-text reveal">
                 ${scene.finalText}
               </p>
-
             </div>
           `;
         } else if (scene.type === "mahjong") {
