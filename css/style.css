@@ -2037,24 +2037,36 @@ button {
 }
 
 @media (max-width: 768px) {
+
   .photo-placeholder img {
     will-change: auto;
     transform: scale(1.06);
+    animation: none;
+    filter: brightness(0.94);
+
     transition:
-      transform 2.2s ease,
-      filter 2.2s ease;
+      transform 1.2s ease,
+      filter 1.2s ease;
+  }
+
+  .reveal.active .photo-placeholder img {
+    transform: scale(1);
+    filter: brightness(1);
   }
 
   .memory-light {
-    filter: blur(22px);
-    animation-duration: 12s;
+    filter: blur(16px);
+    animation: none;
+    opacity: 0.58;
+    transform: scale(1);
   }
 
   .memory-frame .photo-placeholder {
     animation: none;
+
     box-shadow:
-      0 18px 48px rgba(0,0,0,0.42),
-      0 0 0 1px rgba(255,255,255,0.04);
+      0 18px 48px rgba(0, 0, 0, 0.42),
+      0 0 0 1px rgba(255, 255, 255, 0.04);
   }
 
   .memory-pair {
@@ -2082,39 +2094,24 @@ button {
     transform: scale(1.03);
   }
 
+  .memory-pair-photo:first-child img {
+    object-position: 30% center;
+  }
+
   .dust-particle:nth-child(n + 19) {
     display: none;
   }
 
   .reveal {
-    filter: blur(4px);
+    filter: none;
+
     transition:
       opacity 0.85s ease,
-      transform 0.85s ease,
-      filter 0.85s ease;
-  }
-}
-
-/* Mobile live-photo motion without JavaScript parallax */
-@media (max-width: 768px) {
-  .photo-placeholder img {
-    transform: scale(1.08) translateY(0);
-    animation: mobilePhotoDrift 8s ease-in-out infinite alternate;
-    filter: brightness(0.9);
+      transform 0.85s ease;
   }
 
-  .reveal.active .photo-placeholder img {
-    filter: brightness(1);
-  }
-
-  @keyframes mobilePhotoDrift {
-    from {
-      transform: scale(1.08) translateY(0);
-    }
-
-    to {
-      transform: scale(1.12) translateY(-8px);
-    }
+  .reveal.active {
+    filter: none;
   }
 }
 
