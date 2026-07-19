@@ -2361,35 +2361,32 @@ button {
 @media (max-width: 600px) {
   .adventure-carousel {
     --adventure-width: 72vw;
-
     gap: 14px;
-
     padding-top: 20px;
     padding-bottom: 28px;
   }
 
   .adventure-slide {
-    border-radius: 22px;
-
-    opacity: 0.38;
-
-    transform: scale(0.9) translateZ(0);
-
-    filter:
-      blur(2.5px)
-      brightness(0.72)
-      saturate(0.78);
+    contain: none;
+    will-change: auto;
   }
 
   .adventure-slide.is-active {
     opacity: 1;
-
-    transform: scale(0.98) translateZ(0);
+    transform: scale(0.98);
 
     filter:
-      blur(0)
       brightness(1)
       saturate(1);
+  }
+
+  .adventure-edge {
+    width: 9%;
+  }
+
+  .adventure-reflection {
+    padding-left: 28px;
+    padding-right: 28px;
   }
 
   .adventure-edge {
@@ -2412,4 +2409,106 @@ button {
     padding-right:
       calc((100vw - var(--adventure-width)) / 2);
   }
+}
+
+/* =========================================
+   MOBILE IMAGE PERFORMANCE FIX
+========================================= */
+
+@media (max-width: 768px) {
+
+  .reveal {
+    filter: none;
+  }
+
+  .reveal.active {
+    filter: none;
+  }
+
+  .memory-frame,
+  .photo-placeholder {
+    filter: none;
+  }
+
+  .photo-placeholder img {
+    animation: none;
+    transform: none;
+    filter: brightness(1);
+    will-change: auto;
+
+    transition:
+      opacity 0.6s ease;
+  }
+
+  .reveal .photo-placeholder img {
+    opacity: 0.78;
+  }
+
+  .reveal.active .photo-placeholder img {
+    opacity: 1;
+    transform: none;
+    filter: brightness(1);
+  }
+
+  .memory-light {
+    animation: none;
+    filter: blur(12px);
+    opacity: 0.45;
+  }
+
+  .memory-pair-photo img {
+    animation: none;
+    will-change: auto;
+  }
+
+  .memory-pair-photo:first-child img {
+    object-position: 30% center;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .adventure-slide {
+    contain: none;
+    will-change: auto;
+
+    opacity: 0.55;
+    transform: scale(0.92);
+
+    filter:
+      brightness(0.78)
+      saturate(0.82);
+
+    transition:
+      transform 0.45s ease,
+      opacity 0.45s ease,
+      filter 0.45s ease;
+  }
+
+  .adventure-slide.is-active {
+    opacity: 1;
+    transform: scale(0.98);
+
+    filter:
+      brightness(1)
+      saturate(1);
+  }
+}
+
+.build-version {
+  position: fixed;
+  left: 8px;
+  bottom: 8px;
+  z-index: 99999;
+
+  padding: 4px 7px;
+  border-radius: 5px;
+
+  background: rgba(255, 0, 0, 0.75);
+  color: white;
+
+  font-size: 10px;
+  font-family: monospace;
+
+  pointer-events: none;
 }
