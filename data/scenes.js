@@ -111,28 +111,131 @@ const scenes = {
       "Some are quiet.",
       "But all of them became ours."
     ],
-    next: "funnyUs"
+    next: "videoCallNights"
   },
   
-  funnyUs: {
-    type: "chapter",
+  videoCallNights: {
+    type: "videoCallArchive",
     smallText: "03",
-    title: "The Funniest Us",
-    next: "littleThings",
-    moments: [
+    title: "Every Night With You",
+
+    intro:
+      "There were nights when the only way I could be beside you was through a screen. But somehow, I still got to see every version of you.",
+
+    albums: [
       {
-        image: "images/funny/01.jpeg",
-        text: "Some of our best memories weren't planned at all."
+        id: "yawning",
+        title: "The Yawning Princess",
+        subtitle: "Late nights, sleepy eyes, and the yawn you tried so hard to hide.",
+        cover: "images/video-calls/yawning/cover.webp",
+
+        images: [
+          "images/video-calls/yawning/01.jpg",
+          "images/video-calls/yawning/02.jpg",
+          "images/video-calls/yawning/03.jpg",
+          "images/video-calls/yawning/04.jpg",
+          "images/video-calls/yawning/05.jpg",
+          "images/video-calls/yawning/06.jpg",
+          "images/video-calls/yawning/07.jpg",
+          "images/video-calls/yawning/08.jpg",
+          "images/video-calls/yawning/09.jpg",
+          "images/video-calls/yawning/10.jpg",
+          "images/video-calls/yawning/11.jpg",
+          "images/video-calls/yawning/12.jpg",
+          "images/video-calls/yawning/13.jpg",
+          "images/video-calls/yawning/14.jpg",
+          "images/video-calls/yawning/15.jpg",     
+          "images/video-calls/yawning/16.jpg",
+          "images/video-calls/yawning/17.jpg",
+          "images/video-calls/yawning/18.jpg",
+          "images/video-calls/yawning/19.jpg",
+        ]
       },
+
       {
-        image: "images/funny/02.jpeg",
-        text: "Sometimes all it took was one silly joke to make the whole day unforgettable."
+        id: "happy",
+        title: "Happy Baby",
+        subtitle: "The version of you that could make an ordinary night feel lighter.",
+        cover: "images/video-calls/happy/cover.webp",
+
+        images: [
+          "images/video-calls/happy/01.jpg",
+          "images/video-calls/happy/02.jpg",
+          "images/video-calls/happy/03.jpg",
+          "images/video-calls/happy/04.jpg",
+          "images/video-calls/happy/05.jpg",
+          "images/video-calls/happy/06.jpg",
+          "images/video-calls/happy/07.jpg",
+          "images/video-calls/happy/08.jpg",
+          "images/video-calls/happy/09.jpg",
+          "images/video-calls/happy/10.jpg",
+          "images/video-calls/happy/11.jpg" 
+        ]
       },
+
       {
-        image: "images/funny/03.jpeg",
-        text: "If someone asked me what happiness looked like... it would probably look something like this."
+        id: "cute",
+        title: "Cute Baby",
+        subtitle: "All the moments when you knew exactly how adorable you were being.",
+        cover: "images/video-calls/cute/cover.webp",
+
+        images: [
+          "images/video-calls/cute/01.jpg",
+          "images/video-calls/cute/02.jpg",
+          "images/video-calls/cute/03.jpg",
+          "images/video-calls/cute/04.jpg"
+        ]
+      },
+
+      {
+        id: "angry",
+        title: "Angry Baby",
+        subtitle: "A little angry, a little dramatic, and somehow still very cute.",
+        cover: "images/video-calls/angry/cover.webp",
+
+        images: [
+          "images/video-calls/angry/01.jpg",
+        ]
+      },
+
+      {
+        id: "hello",
+        title: "Hello Baby",
+        subtitle: "The face that greeted me and made every call feel worth waiting for.",
+        cover: "images/video-calls/hello/cover.webp",
+
+        images: [
+          "images/video-calls/hello/01.jpg",
+          "images/video-calls/hello/02.jpg",
+          "images/video-calls/hello/03.jpg",
+          "images/video-calls/hello/04.jpg",
+          "images/video-calls/hello/05.jpg",
+          "images/video-calls/hello/06.jpg",
+          "images/video-calls/hello/07.jpg",
+          "images/video-calls/hello/08.jpg",
+          "images/video-calls/hello/09.jpg",
+          "images/video-calls/hello/10.jpg",
+          "images/video-calls/hello/11.jpg",
+          "images/video-calls/hello/12.jpg",
+          "images/video-calls/hello/13.jpg",
+          "images/video-calls/hello/14.jpg",
+          "images/video-calls/hello/15.jpg",
+          "images/video-calls/hello/16.jpg",
+          "images/video-calls/hello/17.jpg",
+          "images/video-calls/hello/18.jpg",
+          "images/video-calls/hello/19.jpg",
+          "images/video-calls/hello/20.jpg",
+          "images/video-calls/hello/21.jpg",
+          "images/video-calls/hello/22.jpg",
+          "images/video-calls/hello/23.jpg"
+        ]
       }
-    ]
+    ],
+
+    closing:
+      "I may not remember everything we talked about. But I remember how much I looked forward to seeing your face every night.",
+
+    next: "littleThings"
   },
 
   littleThings: {

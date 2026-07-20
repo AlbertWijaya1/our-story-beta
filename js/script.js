@@ -118,7 +118,7 @@
       "adventures",
       "mahjongMemory",
       "afterMahjongBreath",
-      "funnyUs",
+      "videoCallNights",
       "littleThings",
       "reflection",
       "holdHand",
