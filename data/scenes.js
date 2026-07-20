@@ -74,7 +74,7 @@ const scenes = {
       "images/adventures/16.jpg",
       "images/adventures/17.jpg",
       "images/adventures/18.jpg",
-      "images/adventures/19.jpg",
+      "images/adventures/19.jpeg",
       "images/adventures/20.jpg",
       "images/adventures/21.jpg",
       "images/adventures/22.jpg",
