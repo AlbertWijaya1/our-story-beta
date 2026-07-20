@@ -213,6 +213,111 @@
               `).join("")}
             </div>
           `;
+        } else if (scene.type === "videoCallArchive") {
+
+          section.innerHTML = `
+            <div class="video-call-archive-card">
+
+              <p class="small-text reveal-child delay-1">
+                ${scene.smallText}
+              </p>
+
+              <h1 class="reveal-child delay-2">
+                ${scene.title}
+              </h1>
+
+              <p class="intro-text reveal-child delay-3">
+                ${scene.intro}
+              </p>
+
+              <div class="video-call-albums">
+                ${scene.albums.map((album, index) => `
+                  <button
+                    class="video-call-album"
+                    type="button"
+                    data-album-index="${index}"
+                  >
+                    <div class="video-call-album-cover">
+                      <img
+                        src="${album.cover}"
+                        alt="${album.title}"
+                        loading="lazy"
+                        decoding="async"
+                      >
+                    </div>
+
+                    <div class="video-call-album-info">
+                      <span class="video-call-album-number">
+                        ${String(index + 1).padStart(2, "0")}
+                      </span>
+
+                      <h2>${album.title}</h2>
+
+                      <p>
+                        ${album.images.length} moments
+                      </p>
+
+                      <span class="video-call-open-label">
+                        Open album
+                      </span>
+                    </div>
+                  </button>
+                `).join("")}
+              </div>
+
+              <div
+                class="video-call-viewer"
+                aria-hidden="true"
+              >
+                <button
+                  class="video-call-close"
+                  type="button"
+                  aria-label="Close album"
+                >
+                  ×
+                </button>
+
+                <p class="video-call-viewer-label"></p>
+
+                <h2 class="video-call-viewer-title"></h2>
+
+                <p class="video-call-viewer-subtitle"></p>
+
+                <div class="video-call-photo-stage">
+                  <button
+                    class="video-call-nav video-call-prev"
+                    type="button"
+                    aria-label="Previous photo"
+                  >
+                    ‹
+                  </button>
+
+                  <img
+                    class="video-call-main-photo"
+                    alt=""
+                    decoding="async"
+                  >
+
+                  <button
+                    class="video-call-nav video-call-next"
+                    type="button"
+                    aria-label="Next photo"
+                  >
+                    ›
+                  </button>
+                </div>
+
+                <p class="video-call-counter"></p>
+              </div>
+
+              <p class="intro-text video-call-closing reveal">
+                ${scene.closing}
+              </p>
+
+            </div>
+          `;        
+
+        
         } else if (scene.type === "adventureCarousel") {
 
           section.innerHTML = `
@@ -384,6 +489,10 @@
 
       if (scene.type === "mahjong") {
         setupMahjongGame(section);
+      }
+
+      if (scene.type === "videoCallArchive") {
+        setupVideoCallArchive(section, scene);
       }
       
       if (scene.type === "adventureCarousel") {
@@ -1061,6 +1170,203 @@
 
     sound.play().catch(() => {});
   }
+
+  function setupVideoCallArchive(section, scene) {
+    const albumButtons = [
+      ...section.querySelectorAll(".video-call-album")
+    ];
+
+    const viewer = section.querySelector(".video-call-viewer");
+    const closeButton = section.querySelector(".video-call-close");
+
+    const viewerLabel = section.querySelector(
+      ".video-call-viewer-label"
+    );
+
+    const viewerTitle = section.querySelector(
+      ".video-call-viewer-title"
+    );
+
+    const viewerSubtitle = section.querySelector(
+      ".video-call-viewer-subtitle"
+    );
+
+    const mainPhoto = section.querySelector(
+      ".video-call-main-photo"
+    );
+
+    const counter = section.querySelector(
+      ".video-call-counter"
+    );
+
+    const prevButton = section.querySelector(
+      ".video-call-prev"
+    );
+
+    const nextButton = section.querySelector(
+      ".video-call-next"
+    );
+
+    if (
+      !viewer ||
+      !mainPhoto ||
+      !counter ||
+      !prevButton ||
+      !nextButton
+    ) {
+      return;
+    }
+
+    let activeAlbum = null;
+    let activeIndex = 0;
+
+    function preloadNearbyImages() {
+      if (!activeAlbum) return;
+
+      const previousIndex =
+        (activeIndex - 1 + activeAlbum.images.length) %
+        activeAlbum.images.length;
+
+      const nextIndex =
+        (activeIndex + 1) %
+        activeAlbum.images.length;
+
+      [previousIndex, nextIndex].forEach(index => {
+        const image = new Image();
+        image.src = activeAlbum.images[index];
+      });
+    }
+
+    function renderCurrentPhoto() {
+      if (!activeAlbum) return;
+
+      const imageSource =
+        activeAlbum.images[activeIndex];
+
+      mainPhoto.classList.add("is-changing");
+
+      setTimeout(() => {
+        mainPhoto.src = imageSource;
+        mainPhoto.alt =
+          `${activeAlbum.title} — photo ${activeIndex + 1}`;
+
+        counter.textContent =
+          `${activeIndex + 1} / ${activeAlbum.images.length}`;
+
+        mainPhoto.onload = () => {
+          mainPhoto.classList.remove("is-changing");
+        };
+
+        preloadNearbyImages();
+      }, 160);
+    }
+
+    function openAlbum(album, albumIndex) {
+      activeAlbum = album;
+      activeIndex = 0;
+
+      viewerLabel.textContent =
+        `Album ${String(albumIndex + 1).padStart(2, "0")}`;
+
+      viewerTitle.textContent = album.title;
+      viewerSubtitle.textContent = album.subtitle;
+
+      viewer.classList.add("is-open");
+      viewer.setAttribute("aria-hidden", "false");
+
+      document.body.classList.add("album-is-open");
+
+      renderCurrentPhoto();
+
+      setTimeout(() => {
+        viewer.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }, 100);
+    }
+
+    function closeAlbum() {
+      viewer.classList.remove("is-open");
+      viewer.setAttribute("aria-hidden", "true");
+
+      document.body.classList.remove("album-is-open");
+
+      mainPhoto.removeAttribute("src");
+
+      activeAlbum = null;
+      activeIndex = 0;
+    }
+
+    function showPreviousPhoto() {
+      if (!activeAlbum) return;
+
+      activeIndex =
+        (activeIndex - 1 + activeAlbum.images.length) %
+        activeAlbum.images.length;
+
+      renderCurrentPhoto();
+    }
+
+    function showNextPhoto() {
+      if (!activeAlbum) return;
+
+      activeIndex =
+        (activeIndex + 1) %
+        activeAlbum.images.length;
+
+      renderCurrentPhoto();
+    }
+
+    albumButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        const albumIndex = Number(
+          button.dataset.albumIndex
+        );
+
+        const album = scene.albums[albumIndex];
+
+        if (!album) return;
+
+        openAlbum(album, albumIndex);
+      });
+    });
+
+    closeButton.addEventListener("click", closeAlbum);
+    prevButton.addEventListener("click", showPreviousPhoto);
+    nextButton.addEventListener("click", showNextPhoto);
+
+    let touchStartX = 0;
+
+    mainPhoto.addEventListener(
+      "touchstart",
+      event => {
+        touchStartX = event.changedTouches[0].clientX;
+      },
+      { passive: true }
+    );
+
+    mainPhoto.addEventListener(
+      "touchend",
+      event => {
+        const touchEndX =
+          event.changedTouches[0].clientX;
+
+        const difference =
+          touchEndX - touchStartX;
+
+        if (Math.abs(difference) < 45) return;
+
+        if (difference > 0) {
+          showPreviousPhoto();
+        } else {
+          showNextPhoto();
+        }
+      },
+      { passive: true }
+    );
+  }
+
 
   function setupAdventureCarousel(section) {
     const carousel = section.querySelector(".adventure-carousel");

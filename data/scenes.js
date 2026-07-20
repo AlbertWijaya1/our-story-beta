@@ -127,7 +127,7 @@ const scenes = {
         id: "yawning",
         title: "The Yawning Princess",
         subtitle: "Late nights, sleepy eyes, and the yawn you tried so hard to hide.",
-        cover: "images/video-calls/yawning/cover.webp",
+        cover: "images/video-calls/yawning/cover.jpg",
 
         images: [
           "images/video-calls/yawning/01.jpg",
@@ -156,7 +156,7 @@ const scenes = {
         id: "happy",
         title: "Happy Baby",
         subtitle: "The version of you that could make an ordinary night feel lighter.",
-        cover: "images/video-calls/happy/cover.webp",
+        cover: "images/video-calls/happy/cover.jpg",
 
         images: [
           "images/video-calls/happy/01.jpg",
@@ -177,7 +177,7 @@ const scenes = {
         id: "cute",
         title: "Cute Baby",
         subtitle: "All the moments when you knew exactly how adorable you were being.",
-        cover: "images/video-calls/cute/cover.webp",
+        cover: "images/video-calls/cute/cover.jpg",
 
         images: [
           "images/video-calls/cute/01.jpg",
@@ -191,7 +191,7 @@ const scenes = {
         id: "angry",
         title: "Angry Baby",
         subtitle: "A little angry, a little dramatic, and somehow still very cute.",
-        cover: "images/video-calls/angry/cover.webp",
+        cover: "images/video-calls/angry/cover.jpg",
 
         images: [
           "images/video-calls/angry/01.jpg",
@@ -202,7 +202,7 @@ const scenes = {
         id: "hello",
         title: "Hello Baby",
         subtitle: "The face that greeted me and made every call feel worth waiting for.",
-        cover: "images/video-calls/hello/cover.webp",
+        cover: "images/video-calls/hello/cover.jpg",
 
         images: [
           "images/video-calls/hello/01.jpg",
