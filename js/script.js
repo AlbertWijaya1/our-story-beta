@@ -686,7 +686,7 @@
       { scene: "adventures", base: [11,13,18], glow: [120,150,190,0.055], glowPos: [54,34], vignette: 0.7 },
       { scene: "mahjongMemory", base: [18,13,8], glow: [212,120,55,0.08], glowPos: [50,42], vignette: 0.66 },
       { scene: "afterMahjongBreath", base: [10,9,8], glow: [212,175,55,0.035], glowPos: [50,40], vignette: 0.74 },
-      { scene: "funnyUs", base: [20,14,9], glow: [212,120,55,0.065], glowPos: [46,36], vignette: 0.68 },
+      {scene: "videoCallNights",base: [20, 14, 9], glow: [212, 120, 55, 0.065],glowPos: [46, 36],vignette: 0.68},
       { scene: "littleThings", base: [13,12,11], glow: [212,175,55,0.045], glowPos: [52,38], vignette: 0.7 },
       { scene: "reflection", base: [9,11,19], glow: [120,140,210,0.055], glowPos: [50,30], vignette: 0.76 },
       { scene: "holdHand", base: [7,6,5], glow: [212,175,55,0.055], glowPos: [50,44], vignette: 0.78 },
@@ -807,7 +807,7 @@
     }
 
     if (
-      sceneName === "funnyUs" ||
+      sceneName === "videoCallNights" ||
       sceneName === "littleThings" ||
       sceneName === "reflection" ||
       sceneName === "holdHand" ||
@@ -815,7 +815,6 @@
     ) {
       nextAct = "act2";
     }
-
     if (
       sceneName === "finalLetter" ||
       sceneName === "ending"
