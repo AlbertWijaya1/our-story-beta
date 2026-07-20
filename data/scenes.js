@@ -299,6 +299,43 @@ const scenes = {
     body: "Let’s make more memories together.",
     finalText: "Happy Anniversary.",
     next: null
+  },
+
+  weddingSurprise: {
+    type: "weddingSurprise",
+
+    smallText: "Wait...",
+
+    title: "I have one more thing.",
+
+    intro:
+      "Chapter Three may end here, but there is something about our future that I have already started dreaming about.",
+
+    revealButton: "See the surprise",
+
+    revealSmallText: "Something for our someday",
+
+    revealTitle: "An Invitation to Our Future",
+
+    revealBody:
+      "The date has not been chosen yet. The place is still waiting for us. But I have already started creating an invitation for the day we begin our forever.",
+
+    qrImage: "images/wedding-surprise/wedding-qr.png",
+
+    weddingUrl:
+      "https://albertwijaya1.github.io/our-wedding-invitation/",
+
+    qrInstruction:
+      "Scan the QR code or tap it to open our future wedding invitation.",
+
+    finalLine:
+      "I hope we get to use this for real someday.",
+
+    signature:
+      "For our future, Albert & Novia",
+
+    next: null
   }
+
 };
 

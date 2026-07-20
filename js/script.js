@@ -124,7 +124,8 @@
       "holdHand",
       "beforeLetterBreath",
       "finalLetter",
-      "ending"
+      "ending",
+      "weddingSurprise"
     ];
 
     storyOrder.forEach(sceneName => {
@@ -201,6 +202,91 @@
             </div>
           `;
         
+
+        } else if (scene.type === "weddingSurprise") {
+
+          section.innerHTML = `
+            <div class="wedding-surprise-card">
+
+              <div class="wedding-surprise-intro">
+                <p class="small-text reveal-child delay-1">
+                  ${scene.smallText}
+                </p>
+
+                <h1 class="reveal-child delay-2">
+                  ${scene.title}
+                </h1>
+
+                <p class="intro-text reveal-child delay-3">
+                  ${scene.intro}
+                </p>
+
+                <button
+                  class="wedding-surprise-button reveal-child delay-3"
+                  type="button"
+                  id="weddingSurpriseBtn"
+                >
+                  ${scene.revealButton}
+                </button>
+              </div>
+
+              <div
+                class="wedding-surprise-reveal"
+                id="weddingSurpriseReveal"
+                aria-hidden="true"
+              >
+                <div class="wedding-surprise-glow"></div>
+
+                <p class="small-text">
+                  ${scene.revealSmallText}
+                </p>
+
+                <h1>
+                  ${scene.revealTitle}
+                </h1>
+
+                <p class="intro-text wedding-surprise-body">
+                  ${scene.revealBody}
+                </p>
+
+                <a
+                  class="wedding-qr-link"
+                  href="${scene.weddingUrl}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open our future wedding invitation"
+                >
+                  <div class="wedding-qr-frame">
+                    <img
+                      src="${scene.qrImage}"
+                      alt="QR code for Albert and Novia's future wedding invitation"
+                      loading="lazy"
+                      decoding="async"
+                    >
+
+                    <span class="wedding-qr-corner corner-top-left"></span>
+                    <span class="wedding-qr-corner corner-top-right"></span>
+                    <span class="wedding-qr-corner corner-bottom-left"></span>
+                    <span class="wedding-qr-corner corner-bottom-right"></span>
+                  </div>
+                </a>
+
+                <p class="wedding-qr-instruction">
+                  ${scene.qrInstruction}
+                </p>
+
+                <p class="wedding-surprise-final-line">
+                  ${scene.finalLine}
+                </p>
+
+                <p class="wedding-surprise-signature">
+                  ${scene.signature}
+                </p>
+              </div>
+
+            </div>
+          `;    
+
 
         } else if (scene.type === "breath") {
 
@@ -494,6 +580,10 @@
       if (scene.type === "videoCallArchive") {
         setupVideoCallArchive(section, scene);
       }
+
+      if (scene.type === "weddingSurprise") {
+        setupWeddingSurprise(section);
+      }
       
       if (scene.type === "adventureCarousel") {
         setupAdventureCarousel(section);
@@ -686,13 +776,14 @@
       { scene: "adventures", base: [11,13,18], glow: [120,150,190,0.055], glowPos: [54,34], vignette: 0.7 },
       { scene: "mahjongMemory", base: [18,13,8], glow: [212,120,55,0.08], glowPos: [50,42], vignette: 0.66 },
       { scene: "afterMahjongBreath", base: [10,9,8], glow: [212,175,55,0.035], glowPos: [50,40], vignette: 0.74 },
-      {scene: "videoCallNights",base: [20, 14, 9], glow: [212, 120, 55, 0.065],glowPos: [46, 36],vignette: 0.68},
+      {scene: "videoCallNights",base: [20, 14, 9], glow: [212, 120, 55, 0.065],glowPos: [46, 36], vignette: 0.68},
       { scene: "littleThings", base: [13,12,11], glow: [212,175,55,0.045], glowPos: [52,38], vignette: 0.7 },
       { scene: "reflection", base: [9,11,19], glow: [120,140,210,0.055], glowPos: [50,30], vignette: 0.76 },
       { scene: "holdHand", base: [7,6,5], glow: [212,175,55,0.055], glowPos: [50,44], vignette: 0.78 },
       { scene: "beforeLetterBreath", base: [6,5,4], glow: [212,175,55,0.05], glowPos: [50,46], vignette: 0.8 },
       { scene: "finalLetter", base: [3,3,3], glow: [212,175,55,0.05], glowPos: [50,48], vignette: 0.86 },
-      { scene: "ending", base: [0,0,0], glow: [0,0,0,0], glowPos: [50,50], vignette: 0.92 }
+      { scene: "ending", base: [0,0,0], glow: [0,0,0,0], glowPos: [50,50], vignette: 0.92 },
+      { scene: "weddingSurprise", base: [11, 5, 4], glow: [212, 130, 70, 0.085], glowPos: [50, 40], vignette: 0.78}
     ];
 
     function lerp(a, b, t) {
@@ -817,11 +908,11 @@
     }
     if (
       sceneName === "finalLetter" ||
-      sceneName === "ending"
+      sceneName === "ending" ||
+      sceneName === "weddingSurprise"
     ) {
       nextAct = "act3";
     }
-
     SoundDirector.restore();
 
     if (lastMusicAct === nextAct) return;
@@ -1365,6 +1456,64 @@
       { passive: true }
     );
   }
+
+
+  function setupWeddingSurprise(section) {
+    const revealButton = section.querySelector(
+      "#weddingSurpriseBtn"
+    );
+
+    const revealContent = section.querySelector(
+      "#weddingSurpriseReveal"
+    );
+
+    const intro = section.querySelector(
+      ".wedding-surprise-intro"
+    );
+
+    if (
+      !revealButton ||
+      !revealContent ||
+      !intro
+    ) {
+      return;
+    }
+
+    let revealed = false;
+
+    revealButton.addEventListener("click", () => {
+      if (revealed) return;
+
+      revealed = true;
+
+      revealButton.disabled = true;
+      revealButton.textContent = "For our future...";
+
+      intro.classList.add("is-leaving");
+
+      if (navigator.vibrate) {
+        navigator.vibrate([40, 40, 80]);
+      }
+
+      setTimeout(() => {
+        intro.style.display = "none";
+
+        revealContent.classList.add("is-visible");
+        revealContent.setAttribute(
+          "aria-hidden",
+          "false"
+        );
+
+        setTimeout(() => {
+          revealContent.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+        }, 200);
+      }, 850);
+    });
+  }
+
 
 
   function setupAdventureCarousel(section) {
