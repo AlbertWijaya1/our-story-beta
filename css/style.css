@@ -1786,7 +1786,7 @@ button {
   left: 0;
   top: 0;
   width: 260px;
-  height: 96px;
+  height: 82px;
   background: linear-gradient(145deg, #f1e7d2, #c8b894);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   transform-origin: top center;
@@ -1800,7 +1800,7 @@ button {
   bottom: 18px;
 
   width: 216px;
-  height: 138px;
+  height: 154px;
   min-height: 0;
 
   padding: 24px 20px;
@@ -1896,7 +1896,7 @@ button {
 
 .envelope.opened .letter-paper {
   opacity: 1;
-  transform: translateY(-38px) scale(1);
+  transform: translateY(-50px) scale(1);
 }
 
 .envelope.unfolded {
@@ -1905,8 +1905,19 @@ button {
   margin-top: 68px;
 }
 
-.letter-card > .intro-text {
-  margin-bottom: 42px;
+@media (min-width: 501px) {
+  .letter-card > .intro-text {
+    margin-top: 26px;
+    margin-bottom: 72px;
+  }
+
+  .envelope {
+    margin-top: 0;
+  }
+
+  .envelope.unfolded {
+    margin-top: 62px;
+  }
 }
 
 .envelope.unfolded .envelope-back,
@@ -1970,7 +1981,7 @@ button {
   }
 
   .letter-card > .intro-text {
-    margin-bottom: 38px;
+    margin-bottom: 48px;
   }
 
   /* Closed envelope */
@@ -1983,7 +1994,7 @@ button {
 
   .envelope-flap {
     width: 240px;
-    height: 90px;
+    height: 78px;
   }
 
   /* Paper inside envelope */
