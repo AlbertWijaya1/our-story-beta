@@ -155,52 +155,67 @@
           </div>
         `;
 
-        } else if (scene.type === "letter") {
+      } else if (scene.type === "letter") {
 
-          section.innerHTML = `
-            <div class="letter-card">
-              <p class="small-text reveal-child delay-1">${scene.smallText}</p>
-              <h1 class="reveal-child delay-2">${scene.title}</h1>
-              <p class="intro-text reveal-child delay-3">
-                I saved this part for last.
-              </p>
+        section.innerHTML = `
+          <div class="letter-card">
+            <p class="small-text reveal-child delay-1">${scene.smallText}</p>
 
-              <button class="envelope" id="envelopeBtn" aria-label="Open letter">
-                <div class="envelope-back"></div>
-                <div class="letter-paper">
-                  <p class="letter-body">
-                    ${scene.body}
+            <h1 class="reveal-child delay-2">
+              ${scene.title}
+            </h1>
+
+            <button
+              class="envelope"
+              id="envelopeBtn"
+              aria-label="Open letter"
+            >
+              <div class="envelope-back"></div>
+
+              <div class="letter-paper">
+                <p class="letter-body">
+                  ${scene.body}
+                </p>
+
+                <div class="letter-signature">
+                  <p class="letter-signoff">
+                    ${scene.signOff}
                   </p>
 
-                  <div class="letter-signature">
-                    <p class="letter-signoff">
-                      ${scene.signOff}
-                    </p>
+                  <span class="letter-signature-name">
+                    ${scene.signature}
+                  </span>
 
-                    <span class="letter-signature-name">
-                      ${scene.signature}
-                    </span>
-
-                    <span class="letter-signature-heart" aria-hidden="true">
-                      💖
-                    </span>
-                  </div>
+                  <span
+                    class="letter-signature-heart"
+                    aria-hidden="true"
+                  >
+                    💖
+                  </span>
                 </div>
-                <div class="envelope-front"></div>
-                <div class="envelope-flap"></div>
-              </button>
+              </div>
 
-              <p class="letter-instruction" id="letterInstruction">
-                Tap the envelope.
-              </p>
+              <div class="envelope-front"></div>
+              <div class="envelope-flap"></div>
+            </button>
 
-              <button class="letter-next" id="letterNextBtn" style="display:none">
-                Continue
-              </button>
-            </div>
-          `;
+            <p class="letter-caption reveal-child delay-3">
+              I saved this part for last.
+            </p>
 
+            <p class="letter-instruction" id="letterInstruction">
+              Open the letter.
+            </p>
 
+            <button
+              class="letter-next"
+              id="letterNextBtn"
+              style="display:none"
+            >
+              Continue
+            </button>
+          </div>
+        `;
 
 
         } else if (scene.type === "ending") {

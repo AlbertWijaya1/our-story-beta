@@ -1729,7 +1729,7 @@ button {
   min-height: 100vh;
   min-height: 100svh;
 
-  padding-top: 90px;
+  padding-top: 140px;
   padding-bottom: 140px;
 
   align-items: flex-start;
@@ -1906,17 +1906,14 @@ button {
 }
 
 @media (min-width: 501px) {
-  .letter-card > .intro-text {
-    margin-top: 26px;
-    margin-bottom: 72px;
-  }
-
+  /* Closed and first-open envelope */
   .envelope {
-    margin-top: 0;
+    margin-top: 62px;
   }
 
+  /* Fully unfolded letter */
   .envelope.unfolded {
-    margin-top: 62px;
+    margin-top: 100px;
   }
 }
 
@@ -1946,10 +1943,31 @@ button {
   line-height: 1.58;
 }
 
+.letter-caption {
+  max-width: 320px;
+
+  margin: 34px auto 0;
+
+  color: var(--muted);
+
+  font-size: 0.98rem;
+  line-height: 1.8;
+
+  text-align: center;
+}
+
+.envelope.unfolded + .letter-caption {
+  display: none;
+}
+
+.letter-instruction:empty {
+  display: none;
+}
+
 .letter-instruction {
   color: var(--muted);
   line-height: 1.8;
-  margin: 28px auto 0;
+  margin: 6px auto 0;
 }
 
 .letter-next {
@@ -1980,16 +1998,12 @@ button {
     font-size: clamp(3.5rem, 18vw, 4.8rem);
   }
 
-  .letter-card > .intro-text {
-    margin-bottom: 48px;
-  }
-
   /* Closed envelope */
   .envelope {
     width: 240px;
     height: 158px;
 
-    margin-top: 14px;
+    margin-top: 30px;
   }
 
   .envelope-flap {
@@ -2059,7 +2073,12 @@ button {
   }
 
   .letter-instruction {
-    margin-top: 26px;
+    margin-top: 4px;
+  }
+
+  .letter-caption {
+    margin-top: 30px;
+    font-size: 0.94rem;
   }
 }
 
