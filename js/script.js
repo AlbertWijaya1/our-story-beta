@@ -168,7 +168,23 @@
               <button class="envelope" id="envelopeBtn" aria-label="Open letter">
                 <div class="envelope-back"></div>
                 <div class="letter-paper">
-                  <p>${scene.body}</p>
+                  <p class="letter-body">
+                    ${scene.body}
+                  </p>
+
+                  <div class="letter-signature">
+                    <p class="letter-signoff">
+                      ${scene.signOff}
+                    </p>
+
+                    <span class="letter-signature-name">
+                      ${scene.signature}
+                    </span>
+
+                    <span class="letter-signature-heart" aria-hidden="true">
+                      💖
+                    </span>
+                  </div>
                 </div>
                 <div class="envelope-front"></div>
                 <div class="envelope-flap"></div>
@@ -1043,35 +1059,62 @@
 
 
   function setupRevealAnimation() {
+    const normalReveals = document.querySelectorAll(
+      ".reveal:not([data-scene='weddingSurprise'])"
+    );
 
-    const reveals = document.querySelectorAll(".reveal");
-
-    const observer = new IntersectionObserver((entries)=>{
-
-        entries.forEach(entry=>{
-
+    const normalObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add("active");
-
-            if (
-              entry.target.dataset.scene === "weddingSurprise"
-            ) {
-              observer.unobserve(entry.target);
-            }
-          } else if (
-            entry.target.dataset.scene !== "weddingSurprise"
-          ) {
+          } else {
             entry.target.classList.remove("active");
           }
         });
+      },
+      {
+        threshold: 0.08,
+        rootMargin: "0px 0px -10% 0px"
+      }
+    );
 
-    }, {
-      threshold: 0.08,
-      rootMargin: "0px 0px -8% 0px"
+    normalReveals.forEach(element => {
+      normalObserver.observe(element);
     });
-    
-    reveals.forEach(el=>observer.observe(el));
 
+    /*
+      The wedding surprise uses a separate observer so its
+      sequence does not begin while it is still below the screen.
+    */
+
+    const weddingSurpriseSection = document.querySelector(
+      '.story-section[data-scene="weddingSurprise"]'
+    );
+
+    if (!weddingSurpriseSection) return;
+
+    const surpriseObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("active");
+
+          /*
+            Preserve the reveal after its first appearance.
+            It will not replay when scrolling away and returning.
+          */
+          surpriseObserver.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.32,
+        rootMargin: "0px 0px -12% 0px"
+      }
+    );
+
+    surpriseObserver.observe(weddingSurpriseSection);
   }
 
   const musicToggle = document.getElementById("musicToggle");

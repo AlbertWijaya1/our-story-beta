@@ -287,10 +287,15 @@ const scenes = {
     type: "letter",
     smallText: "One last thing...",
     title: "For You",
-    body: "Thank you for being part of my days, my routines, my adventures, and my future. I hope this little memory box reminds you how loved you are.",
+
+    body:
+      "Thank you for being part of my days, my routines, my adventures, and my future. One of my favorite things in this world is seeing you smile and hearing your laughter. I hope this little memory box reminds you of something I hope you never forget that you are deeply loved, truly cared for, and appreciated more than words could ever say. Whenever life feels difficult or uncertain, I hope you'll remember that you never have to face it alone. I'll always be here, cheering for you, believing in you, and walking beside you. So let's step into our next chapter with hopeful hearts, endless laughter, and countless new memories waiting to be made.",
+
+    signOff: "From your true loving bf,",
+    signature: "Al",
+
     next: "ending"
   },
-
 
   ending: {
     type: "ending",
