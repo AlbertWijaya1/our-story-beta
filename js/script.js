@@ -189,19 +189,41 @@
 
         } else if (scene.type === "ending") {
 
-          section.innerHTML = `
-            <div class="ending-card">
-              <p class="ending-line ending-delay-1">${scene.smallText}</p>
-              <p class="ending-line ending-delay-2">But our story doesn't.</p>
+            section.innerHTML = `
+              <div class="ending-card">
+                <p class="ending-line ending-delay-1">
+                  ${scene.smallText}
+                </p>
 
-              <h1 class="ending-title ending-delay-3">${scene.title}</h1>
+                <p class="ending-line ending-delay-2">
+                  But our story doesn't.
+                </p>
 
-              <p class="ending-body ending-delay-4">${scene.body}</p>
+                <h1 class="ending-title ending-delay-3">
+                  ${scene.title}
+                </h1>
 
-              <p class="ending-final ending-delay-5">${scene.finalText}</p>
-            </div>
-          `;
-        
+                <p class="ending-body ending-delay-4">
+                  ${scene.body}
+                </p>
+
+                <p class="ending-final ending-delay-5">
+                  ${scene.finalText}
+                </p>
+
+                <button
+                  class="ending-surprise-cue ending-delay-6"
+                  type="button"
+                  aria-label="Continue scrolling"
+                >
+                  <span
+                    class="ending-surprise-arrow"
+                    aria-hidden="true"
+                  >
+                    ↓
+                  </span>
+                </button>              </div>
+            `;        
 
         } else if (scene.type === "weddingSurprise") {
 
@@ -209,27 +231,28 @@
             <div class="wedding-surprise-card">
 
               <div class="wedding-surprise-intro">
-                <p class="small-text reveal-child delay-1">
+
+                <p class="small-text wedding-surprise-step wedding-surprise-step-1">
                   ${scene.smallText}
                 </p>
 
-                <h1 class="reveal-child delay-2">
+                <h1 class="wedding-surprise-step wedding-surprise-step-2">
                   ${scene.title}
                 </h1>
 
-                <p class="intro-text reveal-child delay-3">
+                <p class="intro-text wedding-surprise-step wedding-surprise-step-3">
                   ${scene.intro}
                 </p>
 
                 <button
-                  class="wedding-surprise-button reveal-child delay-3"
+                  class="wedding-surprise-button wedding-surprise-step wedding-surprise-step-4"
                   type="button"
                   id="weddingSurpriseBtn"
                 >
                   ${scene.revealButton}
                 </button>
-              </div>
 
+              </div>
               <div
                 class="wedding-surprise-reveal"
                 id="weddingSurpriseReveal"
@@ -579,6 +602,10 @@
 
       if (scene.type === "videoCallArchive") {
         setupVideoCallArchive(section, scene);
+      }
+
+      if (scene.type === "ending") {
+        setupEndingSurpriseCue(section);
       }
 
       if (scene.type === "weddingSurprise") {
@@ -1023,16 +1050,19 @@
 
         entries.forEach(entry=>{
 
-            if(entry.isIntersecting){
+          if (entry.isIntersecting) {
+            entry.target.classList.add("active");
 
-                entry.target.classList.add("active");
-
-            }else{
-
-                entry.target.classList.remove("active");
-
+            if (
+              entry.target.dataset.scene === "weddingSurprise"
+            ) {
+              observer.unobserve(entry.target);
             }
-
+          } else if (
+            entry.target.dataset.scene !== "weddingSurprise"
+          ) {
+            entry.target.classList.remove("active");
+          }
         });
 
     }, {
@@ -1457,6 +1487,27 @@
     );
   }
 
+
+  function setupEndingSurpriseCue(section) {
+    const cue = section.querySelector(
+      ".ending-surprise-cue"
+    );
+
+    if (!cue) return;
+
+    cue.addEventListener("click", () => {
+      const surpriseSection = document.querySelector(
+        '.story-section[data-scene="weddingSurprise"]'
+      );
+
+      if (!surpriseSection) return;
+
+      surpriseSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
 
   function setupWeddingSurprise(section) {
     const revealButton = section.querySelector(

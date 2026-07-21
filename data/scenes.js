@@ -304,7 +304,7 @@ const scenes = {
   weddingSurprise: {
     type: "weddingSurprise",
 
-    smallText: "Wait...",
+    smallText: "But wait...",
 
     title: "I have one more thing.",
 
