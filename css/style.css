@@ -2034,7 +2034,7 @@ button {
     width: min(320px, calc(100vw - 32px));
     height: 570px;
 
-    margin-top: 58px;
+    margin-top: 82px;
   }
 
   .envelope.unfolded .letter-paper {
