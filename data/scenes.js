@@ -289,7 +289,7 @@ const scenes = {
     title: "For You",
 
     body:
-      "Thank you for being part of my days, my routines, my adventures, and my future. One of my favorite things in this world is seeing you smile and hearing your laughter. I hope this little memory box reminds you of something I hope you never forget that you are deeply loved, truly cared for, and appreciated more than words could ever say. Whenever life feels difficult or uncertain, I hope you'll remember that you never have to face it alone. I'll always be here, cheering for you, believing in you, and walking beside you. So let's step into our next chapter with hopeful hearts, endless laughter, and countless new memories waiting to be made.",
+      "Bebeeee, tengkiu ya sudah mau jadi bagian dari keseharianku yang boring ini, baik sebagai pendengar, support system, maupun rumah bagi saya 🤗. Salah satu hal terbaik adlah melihat bebe tersenyum dan mendengarkan bebe bisa ketawa hepi 🥰. Semoga hadiah kecil memory box ini bisa mengingatkan bebe sesuatu yang penting, kalau bebe selama ini selalu di lope lope, di caring dan di sayang lebih dari apapun. Kapanpun bebe merasa sulit atau ragu, saya mau bebe tau kalau kita disani sama2aa jadi bebe harus kasih tau saya ya kalau ada apa apaa, jangan dipendam sendiriii 🥺. Saya akan selalu disini, menjaga bebe, supprot bebe, and percaya with bebe. Jadiii yuksky lanjut ke chapter selanjutnya dengan full semangat kek habis minum kreatin 10 gelas 😎, kita jalani dengan penuh tawa, kesenangan, dan memori yang akan kita buat lebih banyak dan penuh warna. ✨🎉🎊💗💙",
 
     signOff: "From your true loving bf,",
     signature: "Al",
